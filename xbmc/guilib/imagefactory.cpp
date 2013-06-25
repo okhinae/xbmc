@@ -22,6 +22,7 @@
 #include "imagefactory.h"
 #include "guilib/JpegIO.h"
 #include "guilib/cximage.h"
+#include "pictures/RawPicture.h"
 
 IImage* ImageFactory::CreateLoader(const std::string& strFileName)
 {
@@ -36,6 +37,8 @@ IImage* ImageFactory::CreateLoader(const CURL& url)
 
 IImage* ImageFactory::CreateLoaderFromMimeType(const std::string& strMimeType)
 {
+  if (strMimeType =="image/cr2" || strMimeType == "image/arw")
+    return new RawPicture();
   if(strMimeType == "image/jpeg" || strMimeType == "image/tbn" || strMimeType == "image/jpg")
     return new CJpegIO();
   return new CXImage(strMimeType);

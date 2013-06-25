@@ -43,6 +43,7 @@
 #include "utils/URIUtils.h"
 #include "Autorun.h"
 #include "interfaces/AnnouncementManager.h"
+#include "pictures/RawPicture.h"
 
 #define CONTROL_BTNVIEWASICONS      2
 #define CONTROL_BTNSORTBY           3
