@@ -192,7 +192,7 @@ CStdString CSpecialProtocol::TranslatePathConvertCase(const CStdString& path)
 
   CStdString result;
   vector<CStdString> tokens;
-  CUtil::Tokenize(translatedPath, tokens, "/");
+  StringUtils::Tokenize(translatedPath, tokens, "/");
   CStdString file;
   DIR* dir;
   struct dirent* de;

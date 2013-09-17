@@ -67,7 +67,7 @@ CLinuxTimezone::CLinuxTimezone() : m_IsDST(0)
          if (s[0] == '#')
             continue;
 
-         CUtil::Tokenize(s, tokens, " \t");
+         StringUtils::Tokenize(s, tokens, " \t");
          if (tokens.size() < 3)
             continue;
 

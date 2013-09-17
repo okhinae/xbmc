@@ -920,7 +920,7 @@ void CNetworkInterfaceLinux::GetSettings(NetworkAssignment& assignment, CStdStri
          continue;
 
       // look for "iface <interface name> inet"
-      CUtil::Tokenize(s, tokens, " ");
+      StringUtils::Tokenize(s, tokens, " ");
       if (!foundInterface &&
           tokens.size() >=3 &&
           tokens[0].Equals("iface") &&
@@ -1008,7 +1008,7 @@ void CNetworkInterfaceLinux::SetSettings(NetworkAssignment& assignment, CStdStri
       }
 
       // look for "iface <interface name> inet"
-      CUtil::Tokenize(s, tokens, " ");
+      StringUtils::Tokenize(s, tokens, " ");
       if (tokens.size() == 2 &&
           tokens[0].Equals("auto") &&
           tokens[1].Equals(GetName()))
