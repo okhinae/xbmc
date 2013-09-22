@@ -276,60 +276,20 @@ std::string StringUtils::Join(const vector<std::string> &strings, const std::str
 // added MaxStrings parameter to restrict the number of returned substrings (like perl and python)
 int StringUtils::SplitString(const CStdString& input, const CStdString& delimiter, CStdStringArray &results, unsigned int iMaxStrings /* = 0 */)
 {
-  int iPos = -1;
-  int newPos = -1;
-  int sizeS2 = delimiter.GetLength();
-  int isize = input.GetLength();
-
-  results.clear();
-
-  vector<unsigned int> positions;
-
-  newPos = input.Find (delimiter, 0);
-
-  if ( newPos < 0 )
+  size_t pos = 0;
+  size_t newpos = 0;
+  unsigned int found = 0;
+  size_t delimlength = delimiter.length();
+  while ((newpos = input.find(delimiter, pos)) != std::string::npos)
   {
-    results.push_back(input);
-    return 1;
+    found++;
+    if (iMaxStrings > 0 && found > iMaxStrings)
+      return results.size();
+    results.push_back(input.substr(pos, newpos - pos));
+    pos = newpos + delimlength;
   }
-
-  while ( newPos > iPos )
-  {
-    positions.push_back(newPos);
-    iPos = newPos;
-    newPos = input.Find (delimiter, iPos + sizeS2);
-  }
-
-  // numFound is the number of delimiters which is one less
-  // than the number of substrings
-  unsigned int numFound = positions.size();
-  if (iMaxStrings > 0 && numFound >= iMaxStrings)
-    numFound = iMaxStrings - 1;
-
-  for ( unsigned int i = 0; i <= numFound; i++ )
-  {
-    CStdString s;
-    if ( i == 0 )
-    {
-      if ( i == numFound )
-        s = input;
-      else
-        s = input.Mid( i, positions[i] );
-    }
-    else
-    {
-      int offset = positions[i - 1] + sizeS2;
-      if ( offset < isize )
-      {
-        if ( i == numFound )
-          s = input.Mid(offset);
-        else if ( i > 0 )
-          s = input.Mid( positions[i - 1] + sizeS2,
-                         positions[i] - positions[i - 1] - sizeS2 );
-      }
-    }
-    results.push_back(s);
-  }
+  if (iMaxStrings > 0 && found < iMaxStrings)
+    results.push_back(input.substr(pos));
   // return the number of substrings
   return results.size();
 }
