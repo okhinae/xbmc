@@ -188,7 +188,7 @@ void CGUIDialogAddonInfo::OnUninstall()
 
   // ensure the addon is not a dependency of other installed addons
   VECADDONS addons;
-  CStdStringArray deps;
+  std::vector<std::string> deps;
   CAddonMgr::Get().GetAllAddons(addons);
   for (VECADDONS::iterator it  = addons.begin();
                            it != addons.end();++it)
@@ -199,9 +199,9 @@ void CGUIDialogAddonInfo::OnUninstall()
 
   if (!CAddonInstaller::Get().CheckDependencies(m_localAddon) && deps.size())
   {
-    CStdString strLine0, strLine1;
+    std::string strLine0, strLine1;
     StringUtils::JoinString(deps, ", ", strLine1);
-    strLine0.Format(g_localizeStrings.Get(24046), m_localAddon->Name().c_str());
+    strLine0 = StringUtils::Format(g_localizeStrings.Get(24046), m_localAddon->Name().c_str());
     CGUIDialogOK::ShowAndGetInput(24037, strLine0, strLine1, 24047);
     return;
   }

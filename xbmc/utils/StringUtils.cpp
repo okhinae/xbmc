@@ -245,26 +245,26 @@ bool StringUtils::EndsWith(const std::string &str, const std::string &str2, bool
   return StringUtils::EqualsNoCase(right, str2);
 }
 
-void StringUtils::JoinString(const CStdStringArray &strings, const CStdString& delimiter, CStdString& result)
+void StringUtils::JoinString(const std::vector<std::string> &strings, const std::string& delimiter, std::string& result)
 {
   result = "";
-  for(CStdStringArray::const_iterator it = strings.begin(); it != strings.end(); it++ )
+  for(std::vector<std::string>::const_iterator it = strings.begin(); it != strings.end(); it++ )
     result += (*it) + delimiter;
 
   if(result != "")
-    result.Delete(result.size()-delimiter.size(), delimiter.size());
+    result.erase(result.size()-delimiter.size(), delimiter.size());
 }
 
-CStdString StringUtils::JoinString(const CStdStringArray &strings, const CStdString& delimiter)
+std::string StringUtils::JoinString(const std::vector<std::string> &strings, const std::string& delimiter)
 {
-  CStdString result;
+  std::string result;
   JoinString(strings, delimiter, result);
   return result;
 }
 
-CStdString StringUtils::Join(const vector<string> &strings, const CStdString& delimiter)
+std::string StringUtils::Join(const vector<std::string> &strings, const std::string& delimiter)
 {
-  CStdStringArray strArray;
+  std::vector<std::string> strArray;
   for (unsigned int index = 0; index < strings.size(); index++)
     strArray.push_back(strings.at(index));
 
