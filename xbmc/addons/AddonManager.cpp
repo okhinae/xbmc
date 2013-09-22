@@ -642,7 +642,7 @@ bool CAddonMgr::PlatformSupportsAddon(const cp_plugin_info_t *plugin) const
   if (!metadata)
     return false;
 
-  vector<CStdString> platforms;
+  vector<std::string> platforms;
   if (CAddonMgr::Get().GetExtList(metadata->configuration, "platform", platforms))
   {
     for (unsigned int i = 0; i < platforms.size(); ++i)
@@ -718,7 +718,7 @@ CStdString CAddonMgr::GetExtValue(cp_cfg_element_t *base, const char *path)
   else return CStdString();
 }
 
-bool CAddonMgr::GetExtList(cp_cfg_element_t *base, const char *path, vector<CStdString> &result) const
+bool CAddonMgr::GetExtList(cp_cfg_element_t *base, const char *path, vector<std::string> &result) const
 {
   if (!base || !path)
     return false;

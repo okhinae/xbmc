@@ -101,7 +101,7 @@ std::string CStereoscopicsManager::DetectStereoModeByString(const std::string &n
 {
   std::string stereoMode;
   CStdString searchString(needle);
-  CStdStringArray tags;
+  std::vector<std::string> tags;
   StringUtils::ToUpper(searchString);
 
   CStdString tag( g_advancedSettings.m_stereoscopicflags_sbs );

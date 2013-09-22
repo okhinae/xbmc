@@ -304,7 +304,7 @@ void CGUIInfoLabel::Parse(const CStdString &label, int context)
       {
         // decipher the block
         CStdString block = work.Mid(pos1 + len, pos2 - pos1 - len);
-        CStdStringArray params;
+        std::vector<std::string> params;
         StringUtils::SplitString(block, ",", params);
         int info;
         if (format == FORMATVAR)

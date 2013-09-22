@@ -276,7 +276,7 @@ void CGUIIncludes::ResolveIncludesForNode(TiXmlElement *node, std::map<int, bool
 
 CStdString CGUIIncludes::ResolveConstant(const CStdString &constant) const
 {
-  CStdStringArray values;
+  std::vector<std::string> values;
   StringUtils::SplitString(constant, ",", values);
   for (unsigned int i = 0; i < values.size(); ++i)
   {

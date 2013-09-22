@@ -266,7 +266,7 @@ bool CGUIControlFactory::GetTexture(const TiXmlNode* pRootNode, const char* strT
 void CGUIControlFactory::GetRectFromString(const CStdString &string, CRect &rect)
 {
   // format is rect="left[,top,right,bottom]"
-  CStdStringArray strRect;
+  std::vector<std::string> strRect;
   StringUtils::SplitString(string, ",", strRect);
   if (strRect.size() == 1)
   {

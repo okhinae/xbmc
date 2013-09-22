@@ -31,6 +31,6 @@ public:
   virtual int64_t Seek(int64_t iSeekTime);
   virtual int ReadPCM(BYTE *pBuffer, int size, int *actualsize);
   virtual bool CanInit();
-  virtual void SetMimeParams(const CStdString& strMimeParams);
+  virtual void SetMimeParams(const std::string& strMimeParams);
 };
 

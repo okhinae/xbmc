@@ -288,7 +288,7 @@ std::string StringUtils::Join(const vector<std::string> &strings, const std::str
 // Splits the string input into pieces delimited by delimiter.
 // if 2 delimiters are in a row, it will include the empty string between them.
 // added MaxStrings parameter to restrict the number of returned substrings (like perl and python)
-int StringUtils::SplitString(const CStdString& input, const CStdString& delimiter, CStdStringArray &results, unsigned int iMaxStrings /* = 0 */)
+int StringUtils::SplitString(const std::string& input, const std::string& delimiter, std::vector<std::string> &results, unsigned int iMaxStrings /* = 0 */)
 {
   size_t pos = 0;
   size_t newpos = 0;
@@ -308,19 +308,19 @@ int StringUtils::SplitString(const CStdString& input, const CStdString& delimite
   return results.size();
 }
 
-CStdStringArray StringUtils::SplitString(const CStdString& input, const CStdString& delimiter, unsigned int iMaxStrings /* = 0 */)
+std::vector<std::string> StringUtils::SplitString(const std::string& input, const std::string& delimiter, unsigned int iMaxStrings /* = 0 */)
 {
-  CStdStringArray result;
+  std::vector<std::string> result;
   SplitString(input, delimiter, result, iMaxStrings);
   return result;
 }
 
-vector<string> StringUtils::Split(const std::string& input, const std::string& delimiter, unsigned int iMaxStrings /* = 0 */)
+std::vector<std::string> StringUtils::Split(const std::string& input, const std::string& delimiter, unsigned int iMaxStrings /* = 0 */)
 {
-  CStdStringArray result;
+  std::vector<std::string> result;
   SplitString(input, delimiter, result, iMaxStrings);
 
-  vector<string> strArray;
+  std::vector<std::string> strArray;
   for (unsigned int index = 0; index < result.size(); index++)
     strArray.push_back(result.at(index));
 

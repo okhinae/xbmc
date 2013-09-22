@@ -1913,13 +1913,13 @@ void CUtil::ScanForExternalSubtitles(const CStdString& strMovie, std::vector<CSt
   int iSize = strLookInPaths.size();
   for (int i=0; i<iSize; ++i)
   {
-    CStdStringArray directories;
+    std::vector<std::string> directories;
     int nTokens = StringUtils::SplitString( strLookInPaths[i], "/", directories );
     if (nTokens == 1)
       StringUtils::SplitString( strLookInPaths[i], "\\", directories );
 
     // if it's inside a cdX dir, add parent path
-    if (directories.size() >= 2 && directories[directories.size()-2].size() == 3 && directories[directories.size()-2].Left(2).Equals("cd")) // SplitString returns empty token as last item, hence size-2
+    if (directories.size() >= 2 && directories[directories.size()-2].size() == 3 && StringUtils::EqualsNoCase(directories[directories.size()-2].substr(0, 2), "cd")) // SplitString returns empty token as last item, hence size-2
     {
       CStdString strPath2;
       URIUtils::GetParentPath(strLookInPaths[i], strPath2);

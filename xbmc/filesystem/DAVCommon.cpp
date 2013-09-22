@@ -31,7 +31,7 @@ using namespace XFILE;
  */
 bool CDAVCommon::ValueWithoutNamespace(const TiXmlNode *pNode, const CStdString& value)
 {
-  CStdStringArray tag;
+  std::vector<std::string> tag;
   const TiXmlElement *pElement;
 
   if (!pNode)

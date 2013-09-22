@@ -334,7 +334,7 @@ int CCueDocument::ExtractTimeFromIndex(const CStdString &index)
   }
   numberTime.TrimLeft();
   // split the resulting string
-  CStdStringArray time;
+  std::vector<std::string> time;
   StringUtils::SplitString(numberTime, ":", time);
   if (time.size() != 3)
     return -1;

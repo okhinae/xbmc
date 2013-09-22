@@ -2149,7 +2149,7 @@ void CFileItemList::FilterCueItems()
                 }
                 else
                 { // try replacing the extension with one of our allowed ones.
-                  CStdStringArray extensions;
+                  std::vector<std::string> extensions;
                   StringUtils::SplitString(g_advancedSettings.m_musicExtensions, "|", extensions);
                   for (unsigned int i = 0; i < extensions.size(); i++)
                   {
@@ -2682,7 +2682,7 @@ CStdString CFileItem::GetUserMusicThumb(bool alwaysCheckRemote /* = false */, bo
   // if a folder, check for folder.jpg
   if (m_bIsFolder && !IsFileFolder() && (!IsRemote() || alwaysCheckRemote || CSettings::Get().GetBool("musicfiles.findremotethumbs")))
   {
-    CStdStringArray thumbs;
+    std::vector<std::string> thumbs;
     StringUtils::SplitString(g_advancedSettings.m_musicThumbs, "|", thumbs);
     for (unsigned int i = 0; i < thumbs.size(); ++i)
     {
@@ -2958,7 +2958,7 @@ CStdString CFileItem::GetLocalFanart() const
     items.Append(moreItems);
   }
 
-  CStdStringArray fanarts;
+  std::vector<std::string> fanarts;
   StringUtils::SplitString(g_advancedSettings.m_fanartImages, "|", fanarts);
 
   strFile = URIUtils::ReplaceExtension(strFile, "-fanart");

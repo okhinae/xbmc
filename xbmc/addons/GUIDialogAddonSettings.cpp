@@ -399,7 +399,7 @@ bool CGUIDialogAddonSettings::ShowVirtualKeyboard(int iControl)
             bool bUseFileDirectories = false;
             if (option)
             {
-              vector<CStdString> options;
+              vector<std::string> options;
               StringUtils::SplitString(option, "|", options);
               bUseThumbs = find(options.begin(), options.end(), "usethumbs") != options.end();
               bUseFileDirectories = find(options.begin(), options.end(), "treatasfolder") != options.end();
@@ -456,12 +456,12 @@ bool CGUIDialogAddonSettings::ShowVirtualKeyboard(int iControl)
           const char *strType = setting->Attribute("addontype");
           if (strType)
           {
-            CStdStringArray addonTypes;
+            std::vector<std::string> addonTypes;
             StringUtils::SplitString(strType, ",", addonTypes);
             vector<ADDON::TYPE> types;
             for (unsigned int i = 0 ; i < addonTypes.size() ; i++)
             {
-              ADDON::TYPE type = TranslateType(addonTypes[i].Trim());
+              ADDON::TYPE type = TranslateType(StringUtils::Trim(addonTypes[i]));
               if (type != ADDON_UNKNOWN)
                 types.push_back(type);
             }
@@ -472,7 +472,7 @@ bool CGUIDialogAddonSettings::ShowVirtualKeyboard(int iControl)
               if (multiSelect)
               {
                 // construct vector of addon IDs (IDs are comma seperated in single string)
-                CStdStringArray addonIDs;
+                std::vector<std::string> addonIDs;
                 StringUtils::SplitString(value, ",", addonIDs);
                 if (CGUIWindowAddonBrowser::SelectAddonID(types, addonIDs, false) == 1)
                 {
@@ -855,18 +855,18 @@ void CGUIDialogAddonSettings::CreateControls()
         float fMin = 0.0f;
         float fMax = 100.0f;
         float fInc = 1.0f;
-        vector<CStdString> range;
+        std::vector<std::string> range;
         StringUtils::SplitString(setting->Attribute("range"), ",", range);
         if (range.size() > 1)
         {
-          fMin = (float)atof(range[0]);
+          fMin = (float)atof(range[0].c_str());
           if (range.size() > 2)
           {
-            fMax = (float)atof(range[2]);
-            fInc = (float)atof(range[1]);
+            fMax = (float)atof(range[2].c_str());
+            fInc = (float)atof(range[1].c_str());
           }
           else
-            fMax = (float)atof(range[1]);
+            fMax = (float)atof(range[1].c_str());
         }
 
         CStdString option = setting->Attribute("option");
@@ -918,9 +918,9 @@ void CGUIDialogAddonSettings::CreateControls()
 CStdString CGUIDialogAddonSettings::GetAddonNames(const CStdString& addonIDslist) const
 {
   CStdString retVal;
-  CStdStringArray addons;
+  std::vector<std::string> addons;
   StringUtils::SplitString(addonIDslist, ",", addons);
-  for (CStdStringArray::const_iterator it = addons.begin(); it != addons.end() ; it ++)
+  for (std::vector<std::string>::const_iterator it = addons.begin(); it != addons.end() ; it ++)
   {
     if (!retVal.IsEmpty())
       retVal += ", ";

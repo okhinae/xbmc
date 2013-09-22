@@ -186,7 +186,7 @@ CSlideEffect::CSlideEffect(const TiXmlElement *node) : CAnimEffect(node, EFFECT_
   const char *startPos = node->Attribute("start");
   if (startPos)
   {
-    vector<CStdString> commaSeparated;
+    std::vector<std::string> commaSeparated;
     StringUtils::SplitString(startPos, ",", commaSeparated);
     if (commaSeparated.size() > 1)
       m_startY = (float)atof(commaSeparated[1].c_str());
@@ -195,7 +195,7 @@ CSlideEffect::CSlideEffect(const TiXmlElement *node) : CAnimEffect(node, EFFECT_
   const char *endPos = node->Attribute("end");
   if (endPos)
   {
-    vector<CStdString> commaSeparated;
+    std::vector<std::string> commaSeparated;
     StringUtils::SplitString(endPos, ",", commaSeparated);
     if (commaSeparated.size() > 1)
       m_endY = (float)atof(commaSeparated[1].c_str());
@@ -226,7 +226,7 @@ CRotateEffect::CRotateEffect(const TiXmlElement *node, EFFECT_TYPE effect) : CAn
       m_autoCenter = true;
     else
     {
-      vector<CStdString> commaSeparated;
+      std::vector<std::string> commaSeparated;
       StringUtils::SplitString(centerPos, ",", commaSeparated);
       if (commaSeparated.size() > 1)
         m_center.y = (float)atof(commaSeparated[1].c_str());
@@ -266,7 +266,7 @@ CZoomEffect::CZoomEffect(const TiXmlElement *node, const CRect &rect) : CAnimEff
   const char *start = node->Attribute("start");
   if (start)
   {
-    CStdStringArray params;
+    std::vector<std::string> params;
     StringUtils::SplitString(start, ",", params);
     if (params.size() == 1)
     {
@@ -292,7 +292,7 @@ CZoomEffect::CZoomEffect(const TiXmlElement *node, const CRect &rect) : CAnimEff
   const char *end = node->Attribute("end");
   if (end)
   {
-    CStdStringArray params;
+    std::vector<std::string> params;
     StringUtils::SplitString(end, ",", params);
     if (params.size() == 1)
     {
@@ -322,7 +322,7 @@ CZoomEffect::CZoomEffect(const TiXmlElement *node, const CRect &rect) : CAnimEff
       m_autoCenter = true;
     else
     {
-      vector<CStdString> commaSeparated;
+      std::vector<std::string> commaSeparated;
       StringUtils::SplitString(centerPos, ",", commaSeparated);
       if (commaSeparated.size() > 1)
         m_center.y = (float)atof(commaSeparated[1].c_str());

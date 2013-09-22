@@ -254,7 +254,7 @@ int CBuiltins::Execute(const CStdString& execString)
 {
   // Get the text after the "XBMC."
   CStdString execute;
-  vector<CStdString> params;
+  std::vector<std::string> params;
   CUtil::SplitExecFunction(execString, execute, params);
   execute.ToLower();
   CStdString parameter = params.size() ? params[0] : "";
@@ -454,7 +454,7 @@ int CBuiltins::Execute(const CStdString& execString)
       for (vector<CStdString>::const_iterator param = params.begin(); param != params.end(); ++param)
         argv.push_back(*param);
 
-      vector<CStdString> path;
+      std::vector<std::string> path;
       //split the path up to find the filename
       StringUtils::SplitString(params[0],"\\",path);
       if (path.size())

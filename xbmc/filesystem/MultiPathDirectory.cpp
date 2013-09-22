@@ -168,7 +168,7 @@ bool CMultiPathDirectory::GetPaths(const CStdString& strPath, vector<CStdString>
   URIUtils::RemoveSlashAtEnd(strPath1);
 
   // split on "/"
-  vector<CStdString> vecTemp;
+  std::vector<std::string> vecTemp;
   StringUtils::SplitString(strPath1, "/", vecTemp);
   if (vecTemp.size() == 0)
     return false;
@@ -190,7 +190,7 @@ bool CMultiPathDirectory::HasPath(const CStdString& strPath, const CStdString& s
   URIUtils::RemoveSlashAtEnd(strPath1);
 
   // split on "/"
-  vector<CStdString> vecTemp;
+  std::vector<std::string> vecTemp;
   StringUtils::SplitString(strPath1, "/", vecTemp);
   if (vecTemp.size() == 0)
     return false;

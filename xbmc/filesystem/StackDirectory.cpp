@@ -40,7 +40,7 @@ namespace XFILE
   bool CStackDirectory::GetDirectory(const CStdString& strPath, CFileItemList& items)
   {
     items.Clear();
-    CStdStringArray files;
+    std::vector<std::string> files;
     if (!GetPaths(strPath, files))
       return false;   // error in path
 
@@ -172,14 +172,14 @@ namespace XFILE
     return URIUtils::AddFileToFolder(folder, file);
   }
 
-  bool CStackDirectory::GetPaths(const CStdString& strPath, vector<CStdString>& vecPaths)
+  bool CStackDirectory::GetPaths(const std::string& strPath, std::vector<std::string>& vecPaths)
   {
     // format is:
     // stack://file1 , file2 , file3 , file4
     // filenames with commas are double escaped (ie replaced with ,,), thus the " , " separator used.
-    CStdString path = strPath;
+    std::string path = strPath;
     // remove stack:// from the beginning
-    path = path.Mid(8);
+    path = path.substr(8);
     
     vecPaths.clear();
     StringUtils::SplitString(path, " , ", vecPaths);
@@ -187,8 +187,8 @@ namespace XFILE
       return false;
 
     // because " , " is used as a seperator any "," in the real paths are double escaped
-    for (vector<CStdString>::iterator itPath = vecPaths.begin(); itPath != vecPaths.end(); itPath++)
-      itPath->Replace(",,", ",");
+    for (std::vector<std::string>::iterator itPath = vecPaths.begin(); itPath != vecPaths.end(); itPath++)
+      StringUtils::Replace(*itPath, ",,", ",");
 
     return true;
   }

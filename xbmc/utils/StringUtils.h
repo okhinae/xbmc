@@ -72,8 +72,8 @@ public:
   static void JoinString(const std::vector<std::string> &strings, const std::string& delimiter, std::string& result);
   static std::string JoinString(const std::vector<std::string> &strings, const std::string& delimiter);
   static std::string Join(const std::vector<std::string> &strings, const std::string& delimiter);
-  static int SplitString(const CStdString& input, const CStdString& delimiter, CStdStringArray &results, unsigned int iMaxStrings = 0);
-  static CStdStringArray SplitString(const CStdString& input, const CStdString& delimiter, unsigned int iMaxStrings = 0);
+  static int SplitString(const std::string& input, const std::string& delimiter, std::vector<std::string> &results, unsigned int iMaxStrings = 0);
+  static std::vector<std::string> SplitString(const std::string& input, const std::string& delimiter, unsigned int iMaxStrings = 0);
   static std::vector<std::string> Split(const std::string& input, const std::string& delimiter, unsigned int iMaxStrings = 0);
   static int FindNumber(const CStdString& strInput, const CStdString &strFind);
   static int64_t AlphaNumericCompare(const wchar_t *left, const wchar_t *right);

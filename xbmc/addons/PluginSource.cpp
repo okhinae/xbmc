@@ -56,7 +56,7 @@ AddonPtr CPluginSource::Clone() const
 
 void CPluginSource::SetProvides(const CStdString &content)
 {
-  vector<CStdString> provides;
+  vector<std::string> provides;
   if (!content.IsEmpty())
   {
     StringUtils::SplitString(content, " ", provides);
