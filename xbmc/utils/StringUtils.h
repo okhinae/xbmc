@@ -116,7 +116,7 @@ public:
   static bool ValidateUUID(const CStdString &uuid); // NB only validates syntax
   static double CompareFuzzy(const CStdString &left, const CStdString &right);
   static int FindBestMatch(const CStdString &str, const CStdStringArray &strings, double &matchscore);
-  static bool ContainsKeyword(const CStdString &str, const CStdStringArray &keywords);
+  static bool ContainsKeyword(const std::string &str, const std::vector<std::string> &keywords);
 
   /*! \brief Escapes the given string to be able to be used as a parameter.
 

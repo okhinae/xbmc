@@ -742,9 +742,9 @@ int StringUtils::FindBestMatch(const CStdString &str, const CStdStringArray &str
   return best;
 }
 
-bool StringUtils::ContainsKeyword(const CStdString &str, const CStdStringArray &keywords)
+bool StringUtils::ContainsKeyword(const std::string &str, const std::vector<std::string> &keywords)
 {
-  for (CStdStringArray::const_iterator it = keywords.begin(); it != keywords.end(); it++)
+  for (std::vector<std::string>::const_iterator it = keywords.begin(); it != keywords.end(); it++)
   {
     if (str.find(*it) != str.npos)
       return true;
