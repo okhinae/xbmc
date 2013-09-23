@@ -5616,7 +5616,7 @@ bool CApplication::AlwaysProcess(const CAction& action)
   if (!action.GetName().IsEmpty())
   {
     CStdString builtInFunction;
-    vector<CStdString> params;
+    std::vector<std::string> params;
     CUtil::SplitExecFunction(action.GetName(), builtInFunction, params);
     builtInFunction.ToLower();
 

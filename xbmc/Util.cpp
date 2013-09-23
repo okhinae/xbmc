@@ -1031,29 +1031,29 @@ bool CUtil::TestSplitExec()
 }
 #endif
 
-void CUtil::SplitExecFunction(const CStdString &execString, CStdString &function, vector<CStdString> &parameters)
+void CUtil::SplitExecFunction(const std::string &execString, std::string &function, std::vector<std::string> &parameters)
 {
   CStdString paramString;
 
-  int iPos = execString.Find("(");
-  int iPos2 = execString.ReverseFind(")");
+  size_t iPos = execString.find("(");
+  size_t iPos2 = execString.rfind(")");
   if (iPos > 0 && iPos2 > 0)
   {
-    paramString = execString.Mid(iPos + 1, iPos2 - iPos - 1);
-    function = execString.Left(iPos);
+    paramString = execString.substr(iPos + 1, iPos2 - iPos - 1);
+    function = execString.substr(0, iPos);
   }
   else
     function = execString;
 
   // remove any whitespace, and the standard prefix (if it exists)
-  function.Trim();
-  if( function.Left(5).Equals("xbmc.", false) )
-    function.Delete(0, 5);
+  StringUtils::Trim(function);
+  if( StringUtils::StartsWith(function, "xbmc."))
+    function.erase(0, 5);
 
   SplitParams(paramString, parameters);
 }
 
-void CUtil::SplitParams(const CStdString &paramString, std::vector<CStdString> &parameters)
+void CUtil::SplitParams(const std::string &paramString, std::vector<std::string> &parameters)
 {
   bool inQuotes = false;
   bool lastEscaped = false; // only every second character can be escaped

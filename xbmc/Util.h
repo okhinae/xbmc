@@ -126,8 +126,8 @@ public:
    \param paramString the string to break up
    \param parameters the returned parameters
    */
-  static void SplitParams(const CStdString &paramString, std::vector<CStdString> &parameters);
-  static void SplitExecFunction(const CStdString &execString, CStdString &function, std::vector<CStdString> &parameters);
+  static void SplitParams(const std::string &paramString, std::vector<std::string> &parameters);
+  static void SplitExecFunction(const std::string &execString, std::string &function, std::vector<std::string> &parameters);
   static int GetMatchingSource(const CStdString& strPath, VECSOURCES& VECSOURCES, bool& bIsSourceName);
   static CStdString TranslateSpecialSource(const CStdString &strSpecial);
   static void DeleteDirectoryCache(const CStdString &prefix = "");

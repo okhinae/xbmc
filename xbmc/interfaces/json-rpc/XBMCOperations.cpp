@@ -28,7 +28,7 @@ using namespace JSONRPC;
 
 JSONRPC_STATUS CXBMCOperations::GetInfoLabels(const CStdString &method, ITransportLayer *transport, IClient *client, const CVariant &parameterObject, CVariant &result)
 {
-  std::vector<CStdString> info;
+  std::vector<std::string> info;
 
   for (unsigned int i = 0; i < parameterObject["labels"].size(); i++)
   {
@@ -54,7 +54,7 @@ JSONRPC_STATUS CXBMCOperations::GetInfoLabels(const CStdString &method, ITranspo
 
 JSONRPC_STATUS CXBMCOperations::GetInfoBooleans(const CStdString &method, ITransportLayer *transport, IClient *client, const CVariant &parameterObject, CVariant &result)
 {
-  std::vector<CStdString> info;
+  std::vector<std::string> info;
 
   bool CanControlPower = (client->GetPermissionFlags() & ControlPower) > 0;
 
