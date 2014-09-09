@@ -591,6 +591,10 @@ void CDVDInputStreamBluray::ProcessEvent() {
   case BD_EVENT_PLAYMARK:
     break;
 
+  case BD_EVENT_DISCONTINUITY:
+    m_player->OnDVDNavResult(NULL, 1);
+    break;
+
   case BD_EVENT_NONE:
     break;
 
