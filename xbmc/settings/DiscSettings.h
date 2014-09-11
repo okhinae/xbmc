@@ -28,3 +28,16 @@ enum BDPlaybackMode
   BD_PLAYBACK_DISC_MENU,
   BD_PLAYBACK_MAIN_TITLE,
 };
+
+/**
+* Blur-ray region codes
+* 1 - region A,
+* 2 - region B,
+* 4 - region C
+*/
+enum BDRegionCodes
+{
+  BD_REGION_A = 1,
+  BD_REGION_B = 2,
+  BD_REGION_C = 4  
+};

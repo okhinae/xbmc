@@ -1129,10 +1129,12 @@ bool CDVDInputStreamBluray::HasMenu()
 
 void CDVDInputStreamBluray::setupPlayerSettings()
 {
-  int region = CSettings::Get().GetInt("dvds.playerregion");
-  if (region == 0)
+  int region = CSettings::Get().GetInt("bluray.region");
+  if ( region != BD_REGION_A
+    && region != BD_REGION_B
+    && region != BD_REGION_C)
   {
-    CLog::Log(LOGWARNING, "CDVDInputStreamBluray::Open - region dvd must be set in setting, assuming region 1");
+    CLog::Log(LOGWARNING, "CDVDInputStreamBluray::Open - Blu-ray region must be set in setting, assuming region A");
     region = 1;
   }
   m_dll->bd_set_player_setting(m_bd, BLURAY_PLAYER_SETTING_REGION_CODE, region);

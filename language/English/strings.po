@@ -6956,7 +6956,31 @@ msgctxt "#14104"
 msgid "Show simplified menu"
 msgstr ""
 
-#empty strings from id 14105 to 15011
+#. Name of a setting for Blu-ray region codes
+#: system/settings/settings.xml
+msgctxt "#14105"
+msgid "Blu-ray region Code"
+msgstr ""
+
+#. Region Code option for Blu-ray
+#: system/settings/settings.xml
+msgctxt "#14106"
+msgid "Region A"
+msgstr ""
+
+#. Region Code option for Blu-ray
+#: system/settings/settings.xml
+msgctxt "#14107"
+msgid "Region B"
+msgstr ""
+
+#. Region Code option for Blu-ray
+#: system/settings/settings.xml
+msgctxt "#14108"
+msgid "Region C"
+msgstr ""
+
+#empty strings from id 14109 to 15011
 
 #: xbmc/video/VideoDatabase.cpp
 msgctxt "#15012"
@@ -16317,4 +16341,10 @@ msgstr ""
 #: system/settings/rbp.xml
 msgctxt "#38010"
 msgid "GPU accelerated"
+msgstr ""
+
+#. Description of setting #14105 Settings -> Video -> Discs -> Blu-ray region code
+#: system/settings/settings.xml
+msgctxt "#37032"
+msgid "Region A - Americas, East Asia and Southeast Asia. Region B - Africa, Middle East, Southwest Asia, Europe, Australia, New Zealand. Region C - Central Asia, mainland China, Mongolia, South Asia, Belarus, Russia, Ukraine, Kazakhstan."
 msgstr ""
