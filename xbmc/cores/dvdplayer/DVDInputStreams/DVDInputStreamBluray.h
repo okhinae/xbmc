@@ -57,6 +57,7 @@ public:
   virtual int64_t GetLength();
   virtual int GetBlockSize() { return 6144; }
   virtual ENextStream NextStream();
+  virtual void ForceExit();
 
 
   /* IMenus */

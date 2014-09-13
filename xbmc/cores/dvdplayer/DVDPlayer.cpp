@@ -27,6 +27,7 @@
 #include "DVDInputStreams/DVDInputStreamNavigator.h"
 #include "DVDInputStreams/DVDInputStreamTV.h"
 #include "DVDInputStreams/DVDInputStreamPVRManager.h"
+#include "DVDInputStreams/DVDInputStreamBluray.h"
 
 #include "DVDDemuxers/DVDDemux.h"
 #include "DVDDemuxers/DVDDemuxUtils.h"
@@ -685,6 +686,13 @@ bool CDVDPlayer::CloseFile(bool reopen)
 
   if(m_pInputStream)
     m_pInputStream->Abort();
+
+  if (!m_pDemuxer)
+  {
+    CDVDInputStreamBluray* bluray = dynamic_cast<CDVDInputStreamBluray*>(m_pInputStream);
+    if (bluray)
+      bluray->ForceExit();
+  }
 
   CLog::Log(LOGNOTICE, "DVDPlayer: waiting for threads to exit");
 

@@ -424,6 +424,12 @@ bool CDVDInputStreamBluray::Open(const char* strFile, const std::string& content
   return true;
 }
 
+// Hack: Force exit when libbluray hangs, called by dvdplayer on close if there's no demuxer
+void CDVDInputStreamBluray::ForceExit()
+{
+  m_hold = HOLD_ERROR;
+}
+
 // close file and reset everyting
 void CDVDInputStreamBluray::Close()
 {
