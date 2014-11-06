@@ -1142,11 +1142,17 @@ void CDVDInputStreamBluray::setupPlayerSettings()
   m_dll->bd_set_player_setting(m_bd, BLURAY_PLAYER_SETTING_REGION_CODE, region);
   m_dll->bd_set_player_setting(m_bd, BLURAY_PLAYER_SETTING_PARENTAL, 99);
   m_dll->bd_set_player_setting(m_bd, BLURAY_PLAYER_SETTING_PLAYER_PROFILE, 3);
-  m_dll->bd_set_player_setting_str(m_bd, BLURAY_PLAYER_SETTING_AUDIO_LANG, g_langInfo.GetDVDAudioLanguage().c_str());
-  m_dll->bd_set_player_setting_str(m_bd, BLURAY_PLAYER_SETTING_PG_LANG, g_langInfo.GetDVDSubtitleLanguage().c_str());
-  m_dll->bd_set_player_setting_str(m_bd, BLURAY_PLAYER_SETTING_MENU_LANG, g_langInfo.GetDVDMenuLanguage().c_str());
 
   std::string langCode;
+  g_LangCodeExpander.ConvertToThreeCharCode(langCode, g_langInfo.GetDVDAudioLanguage());
+  m_dll->bd_set_player_setting_str(m_bd, BLURAY_PLAYER_SETTING_AUDIO_LANG, langCode.c_str());
+
+  g_LangCodeExpander.ConvertToThreeCharCode(langCode, g_langInfo.GetDVDSubtitleLanguage());
+  m_dll->bd_set_player_setting_str(m_bd, BLURAY_PLAYER_SETTING_PG_LANG, langCode.c_str());
+
+  g_LangCodeExpander.ConvertToThreeCharCode(langCode, g_langInfo.GetDVDMenuLanguage());
+  m_dll->bd_set_player_setting_str(m_bd, BLURAY_PLAYER_SETTING_MENU_LANG, langCode.c_str());
+
   g_LangCodeExpander.ConvertToTwoCharCode(langCode, g_langInfo.GetRegionLocale());
   m_dll->bd_set_player_setting_str(m_bd, BLURAY_PLAYER_SETTING_COUNTRY_CODE, langCode.c_str());
 
