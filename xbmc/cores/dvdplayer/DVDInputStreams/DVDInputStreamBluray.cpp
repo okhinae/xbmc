@@ -309,7 +309,7 @@ bool CDVDInputStreamBluray::Open(const char* strFile, const std::string& content
   m_dll->bd_register_dir(DllLibbluray::dir_open);
   m_dll->bd_register_file(DllLibbluray::file_open);
   m_dll->bd_set_debug_handler(DllLibbluray::bluray_logger);
-  m_dll->bd_set_debug_mask(DBG_CRIT | DBG_BLURAY | DBG_NAV | DBG_BDJ | DBG_JNI);
+  m_dll->bd_set_debug_mask(DBG_CRIT | DBG_BLURAY | DBG_NAV | DBG_BDJ /*| DBG_JNI*/);
 
   CLog::Log(LOGDEBUG, "CDVDInputStreamBluray::Open - opening %s", root.c_str());
   m_bd = m_dll->bd_open(root.c_str(), NULL);
@@ -756,7 +756,8 @@ void CDVDInputStreamBluray::OverlayClear(SPlane& plane, int x, int y, int w, int
     }
 
     it = plane.o.erase(it);
-    plane.o.insert(it, add.begin(), add.end());
+    if (!add.empty())
+      plane.o.insert(it, add.begin(), add.end());
   }
 #endif
 }
@@ -883,11 +884,22 @@ void CDVDInputStreamBluray::OverlayCallbackARGB(const struct bd_argb_overlay_s *
     OverlayInit(plane, ov->w, ov->h);
     return;
   }
+    
+    //uint8_t* s = &(*over)->data[ov->y * (*over)->linesize + ov->x * 4];
+    //
+    //uint8_t* t = (uint8_t*)&ov->argb[ov->y * ov->stride*4 + ov->x * 4];
+
+    //for (int row = 0; row < ov->h; ++row)
+    //{
+    //  memcpy(s, t, ov->w*4);
+    //  s += (*over)->linesize/*ov->stride*4*/;
+    //  t += ov->stride * 4;
+    //}
 
   if (ov->cmd == BD_ARGB_OVERLAY_DRAW)
     OverlayClear(plane, ov->x, ov->y, ov->w, ov->h);
 
-  /* uncompress and draw bitmap */
+
   if (ov->argb && ov->cmd == BD_ARGB_OVERLAY_DRAW)
   {
     SOverlay overlay(new CDVDOverlayImage(), std::ptr_fun(CDVDOverlay::Release));
@@ -898,6 +910,40 @@ void CDVDInputStreamBluray::OverlayCallbackARGB(const struct bd_argb_overlay_s *
     unsigned bytes = ov->stride * ov->h * 4;
     uint8_t *img = (uint8_t*) malloc(bytes);
     memcpy(img, ov->argb, bytes);
+    {
+      if (ov->h < 1080)
+      {
+        uint8_t* start = img;
+        for (unsigned int pix = 0; pix < ov->w*ov->h * 4; pix += 4)
+        {
+          //start[pix] = 0;
+          //start[pix + 1] = 0;
+          //start[pix + 2] = 0;
+          //start[pix + 3] = 0;
+          uint8_t b = start[pix];
+          uint8_t g = start[pix + 1];
+          uint8_t r = start[pix + 2];
+          uint8_t a = start[pix + 3];
+          if (b || r || g)
+            CLog::Log(LOGERROR, "CDVDInputStreamBluray::Seek - seek to");
+        }
+      }
+    }
+    //if (ov->h < 1080)
+    //  memcpy(img, ov->argb, bytes);
+    //else
+    //{
+    //  memset(img, 0, bytes);
+    //  uint8_t* start = img;
+    //  for (unsigned int pix = 0; pix < ov->w*ov->h * 4; pix += 4)
+    //  {
+    //    start[pix] = 0;
+    //    start[pix + 1] = 0;
+    //    start[pix + 2] = 0;
+    //    start[pix + 3] = 255;
+    //  }
+
+    //}
 
     overlay->data     = img;
     overlay->linesize = ov->stride * 4;
@@ -909,7 +955,7 @@ void CDVDInputStreamBluray::OverlayCallbackARGB(const struct bd_argb_overlay_s *
     overlay->source_width  = plane.w;
     plane.o.push_back(overlay);
   }
-
+  
   if(ov->cmd == BD_ARGB_OVERLAY_FLUSH)
     OverlayFlush(ov->pts);
 }
@@ -1172,9 +1218,9 @@ void CDVDInputStreamBluray::setupPlayerSettings()
     CLog::Log(LOGWARNING, "CDVDInputStreamBluray::Open - Blu-ray region must be set in setting, assuming region A");
     region = 1;
   }
-  m_dll->bd_set_player_setting(m_bd, BLURAY_PLAYER_SETTING_REGION_CODE, region);
-  m_dll->bd_set_player_setting(m_bd, BLURAY_PLAYER_SETTING_PARENTAL, 99);
-  m_dll->bd_set_player_setting(m_bd, BLURAY_PLAYER_SETTING_PLAYER_PROFILE, 3);
+  m_dll->bd_set_player_setting(m_bd, BLURAY_PLAYER_SETTING_REGION_CODE, 1);
+  //m_dll->bd_set_player_setting(m_bd, BLURAY_PLAYER_SETTING_PARENTAL, 99);
+  //m_dll->bd_set_player_setting(m_bd, BLURAY_PLAYER_SETTING_PLAYER_PROFILE, 3);
 
   std::string langCode;
   g_LangCodeExpander.ConvertToThreeCharCode(langCode, g_langInfo.GetDVDAudioLanguage());
@@ -1182,6 +1228,7 @@ void CDVDInputStreamBluray::setupPlayerSettings()
 
   g_LangCodeExpander.ConvertToThreeCharCode(langCode, g_langInfo.GetDVDSubtitleLanguage());
   m_dll->bd_set_player_setting_str(m_bd, BLURAY_PLAYER_SETTING_PG_LANG, langCode.c_str());
+  m_dll->bd_set_player_setting(m_bd, BLURAY_PLAYER_SETTING_DECODE_PG, 1);
 
   g_LangCodeExpander.ConvertToThreeCharCode(langCode, g_langInfo.GetDVDMenuLanguage());
   m_dll->bd_set_player_setting_str(m_bd, BLURAY_PLAYER_SETTING_MENU_LANG, langCode.c_str());
