@@ -20,7 +20,6 @@
 
 #include "GUIDialogExtendedProgressBar.h"
 #include "guilib/GUIProgressControl.h"
-#include "guilib/GUISliderControl.h"
 #include "threads/SingleLock.h"
 #include "threads/SystemClock.h"
 
