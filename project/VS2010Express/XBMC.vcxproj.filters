@@ -5416,9 +5416,6 @@
     <ClInclude Include="..\..\xbmc\interfaces\legacy\swighelper.h">
       <Filter>interfaces\legacy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\xbmc\interfaces\legacy\Tuple.h">
-      <Filter>interfaces\legacy</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\xbmc\interfaces\legacy\Window.h">
       <Filter>interfaces\legacy</Filter>
     </ClInclude>
@@ -5944,7 +5941,7 @@
     <ClInclude Include="..\..\xbmc\addons\LanguageResource.h">
       <Filter>addons</Filter>
     </ClInclude>
-     <ClInclude Include="..\..\xbmc\addons\UISoundsResource.h">
+    <ClInclude Include="..\..\xbmc\addons\UISoundsResource.h">
       <Filter>addons</Filter>
     </ClInclude>
     <ClInclude Include="..\..\xbmc\filesystem\ResourceFile.h">

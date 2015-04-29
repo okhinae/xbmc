@@ -586,12 +586,12 @@ namespace XBMCAddon
       }
     } // end ListItem::addStreamInfo
 
-    void ListItem::addContextMenuItems(const std::vector<Tuple<String,String> >& items, bool replaceItems /* = false */)
+    void ListItem::addContextMenuItems(const std::vector<std::tuple<String,String> >& items, bool replaceItems /* = false */)
     {
       int itemCount = 0;
-      for (std::vector<Tuple<String,String> >::const_iterator iter = items.begin(); iter < items.end(); ++iter, ++itemCount)
+      for (std::vector<std::tuple<String,String> >::const_iterator iter = items.begin(); iter < items.end(); ++iter, ++itemCount)
       {
-        Tuple<String,String> tuple = *iter;
+        std::tuple<String,String> tuple = *iter;
         if (tuple.GetNumValuesSet() != 2)
           throw ListItemException("Must pass in a list of tuples of pairs of strings. One entry in the list only has %d elements.",tuple.GetNumValuesSet());
         std::string uText = tuple.first();

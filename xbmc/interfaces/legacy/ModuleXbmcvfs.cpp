@@ -80,7 +80,7 @@ namespace XBMCAddon
       return (force ? CFileUtils::DeleteItem(path,force) : XFILE::CDirectory::Remove(path));
     }      
 
-    Tuple<std::vector<String>, std::vector<String> > listdir(const String& path)
+    std::tuple<std::vector<String>, std::vector<String> > listdir(const String& path)
     {
       DelayedCallGuard dg;
       CFileItemList items;
@@ -88,9 +88,8 @@ namespace XBMCAddon
       strSource = path;
       XFILE::CDirectory::GetDirectory(strSource, items, "", XFILE::DIR_FLAG_NO_FILE_DIRS);
 
-      Tuple<std::vector<String>, std::vector<String> > ret;
+      std::tuple<std::vector<String>, std::vector<String> > ret;
       // initialize the Tuple to two values
-      ret.second();
 
       for (int i=0; i < items.Size(); i++)
       {
@@ -100,12 +99,12 @@ namespace XBMCAddon
         {
           URIUtils::RemoveSlashAtEnd(itemPath);
           std::string strFileName = URIUtils::GetFileName(itemPath);
-          ret.first().push_back(strFileName);
+          std::get<0>(ret).push_back(strFileName);
         }
         else // file
         {
           std::string strFileName = URIUtils::GetFileName(itemPath);
-          ret.second().push_back(strFileName);
+          std::get<1>(ret).push_back(strFileName);
         }
       }
 

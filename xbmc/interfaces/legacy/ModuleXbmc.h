@@ -19,12 +19,10 @@
  */
 
 #include "AddonString.h"
-#include "Tuple.h"
-//#include "Monitor.h"
-
 #include "utils/LangCodeExpander.h"
 #include "swighelper.h"
 #include <vector>
+#include <tuple>
 
 namespace XBMCAddon
 {
@@ -315,7 +313,7 @@ namespace XBMCAddon
      * example:
      *   - title, year = xbmc.getCleanMovieTitle('/path/to/moviefolder/test.avi', True)
      */
-    Tuple<String,String> getCleanMovieTitle(const String& path, bool usefoldername = false);
+    std::tuple<String,String> getCleanMovieTitle(const String& path, bool usefoldername = false);
 
     /**
      * validatePath(path) -- Returns the validated path.

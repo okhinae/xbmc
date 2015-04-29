@@ -40,15 +40,15 @@ namespace XBMCAddon
     }
 
     bool addDirectoryItems(int handle, 
-                           const std::vector<Tuple<String,const XBMCAddon::xbmcgui::ListItem*,bool> >& items, 
+                           const std::vector<std::tuple<String,const XBMCAddon::xbmcgui::ListItem*,bool> >& items, 
                            int totalItems)
     {
       CFileItemList fitems;
-      for (std::vector<Tuple<String,const XBMCAddon::xbmcgui::ListItem*,bool> >::const_iterator item = items.begin();
+      for (std::vector<std::tuple<String,const XBMCAddon::xbmcgui::ListItem*,bool> >::const_iterator item = items.begin();
            item < items.end(); ++item )
       {
-        const Tuple<String,const XBMCAddon::xbmcgui::ListItem*,bool>* pItem = &(*item);
-        const String& url = pItem->first();
+        const std::tuple<String,const XBMCAddon::xbmcgui::ListItem*,bool>* pItem = &(*item);
+        const String& url = std::get<0>(pItem);
         const XBMCAddon::xbmcgui::ListItem *pListItem = pItem->second();
         bool bIsFolder = pItem->GetNumValuesSet() > 2 ? pItem->third() : false;
         pListItem->item->SetPath(url);

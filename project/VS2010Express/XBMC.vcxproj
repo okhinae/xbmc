@@ -938,7 +938,6 @@
     <ClInclude Include="..\..\xbmc\interfaces\legacy\PlayList.h" />
     <ClInclude Include="..\..\xbmc\interfaces\legacy\RenderCapture.h" />
     <ClInclude Include="..\..\xbmc\interfaces\legacy\swighelper.h" />
-    <ClInclude Include="..\..\xbmc\interfaces\legacy\Tuple.h" />
     <ClInclude Include="..\..\xbmc\interfaces\legacy\Window.h" />
     <ClInclude Include="..\..\xbmc\interfaces\legacy\WindowDialog.h" />
     <ClInclude Include="..\..\xbmc\interfaces\legacy\WindowDialogMixin.h" />

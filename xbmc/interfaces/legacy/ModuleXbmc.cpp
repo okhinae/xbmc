@@ -381,7 +381,7 @@ namespace XBMCAddon
       return CSpecialProtocol::TranslatePath(path);
     }
 
-    Tuple<String,String> getCleanMovieTitle(const String& path, bool usefoldername)
+    std::tuple<String,String> getCleanMovieTitle(const String& path, bool usefoldername)
     {
       XBMC_TRACE;
       CFileItem item(path, false);
@@ -391,7 +391,7 @@ namespace XBMCAddon
       std::string strTitle;
       std::string strYear;
       CUtil::CleanString(strName, strTitle, strTitleAndYear, strYear, usefoldername);
-      return Tuple<String,String>(strTitle,strYear);
+      return std::tuple<String,String>(strTitle,strYear);
     }
 
     String validatePath(const String& path)

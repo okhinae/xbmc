@@ -22,9 +22,9 @@
 
 #include <map>
 #include <vector>
+#include <tuple>
 
 #include "AddonClass.h"
-#include "Tuple.h"
 #include "Dictionary.h"
 #include "Alternative.h"
 #include "ListItem.h"
@@ -42,7 +42,7 @@ namespace XBMCAddon
     XBMCCOMMONS_STANDARD_EXCEPTION(ListItemException);
 
     // This is a type that represents either a String or a String Tuple
-    typedef Alternative<StringOrInt,Tuple<String, StringOrInt> > InfoLabelStringOrTuple;
+    typedef Alternative<StringOrInt,std::tuple<String, StringOrInt> > InfoLabelStringOrTuple;
 
     // This type is either a String or a list of InfoLabelStringOrTuple types
     typedef Alternative<StringOrInt, std::vector<InfoLabelStringOrTuple> > InfoLabelValue;
@@ -287,7 +287,7 @@ namespace XBMCAddon
        * example:
        *   - listitem.addContextMenuItems([('Theater Showtimes', 'RunScript(special://home/scripts/showtimes/default.py,Iron Man)',)])n
        */
-      void addContextMenuItems(const std::vector<Tuple<String,String> >& items, bool replaceItems = false);
+      void addContextMenuItems(const std::vector<std::tuple<String,String> >& items, bool replaceItems = false);
 
       /**
        * setProperty(key, value) -- Sets a listitem property, similar to an infolabel.\n

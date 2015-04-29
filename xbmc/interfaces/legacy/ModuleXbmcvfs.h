@@ -21,7 +21,7 @@
 #pragma once
 
 #include "AddonString.h"
-#include "Tuple.h"
+#include <tuple>
 #include <vector>
 
 namespace XBMCAddon
@@ -117,7 +117,7 @@ namespace XBMCAddon
      * example:
      *  - dirs, files = xbmcvfs.listdir(path)
      */
-    Tuple<std::vector<String>, std::vector<String> > listdir(const String& path);
+    std::tuple<std::vector<String>, std::vector<String> > listdir(const String& path);
   }
 }
 

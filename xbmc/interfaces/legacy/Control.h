@@ -25,9 +25,10 @@
 #include "input/Key.h"
 
 #include "Alternative.h"
-#include "Tuple.h"
 #include "ListItem.h"
 #include "swighelper.h"
+
+#include <tuple>
 
 
 // hardcoded offsets for button controls (and controls that use button controls)
@@ -165,7 +166,7 @@ namespace XBMCAddon
        * example:
        *   - self.button.setAnimations([('focus', 'effect=zoom end=90,247,220,56 time=0',)])
        */
-      virtual void setAnimations(const std::vector< Tuple<String,String> >& eventAttr);
+      virtual void setAnimations(const std::vector< std::tuple<String,String> >& eventAttr);
 
       // setPosition() Method
       /**

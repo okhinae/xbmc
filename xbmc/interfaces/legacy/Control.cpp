@@ -790,7 +790,7 @@ namespace XBMCAddon
         pGUIControl->SetEnableCondition(enable);
     }
 
-    void Control::setAnimations(const std::vector< Tuple<String,String> >& eventAttr)
+    void Control::setAnimations(const std::vector< std::tuple<String,String> >& eventAttr)
     {
       CXBMCTinyXML xmlDoc;
       TiXmlElement xmlRootElement("control");
@@ -802,7 +802,7 @@ namespace XBMCAddon
 
       for (unsigned int anim = 0; anim < eventAttr.size(); anim++)
       {
-        const Tuple<String,String>& pTuple = eventAttr[anim];
+        const std::tuple<String,String>& pTuple = eventAttr[anim];
 
         if (pTuple.GetNumValuesSet() != 2)
           throw WindowException("Error unpacking tuple found in list");

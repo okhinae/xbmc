@@ -28,7 +28,7 @@ namespace XBMCAddon
 {
   namespace xbmcwsgi
   {
-    typedef Tuple<String, String> WsgiHttpHeader;
+    typedef std::tuple<String, String> WsgiHttpHeader;
 
     /**
      * Represents the start_response callable passed to a WSGI handler.
