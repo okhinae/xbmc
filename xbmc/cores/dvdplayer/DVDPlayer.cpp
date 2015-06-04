@@ -115,6 +115,24 @@ SelectionStream& CSelectionStreams::Get(StreamType type, int index)
   return m_invalid;
 }
 
+void CSelectionStreams::Remove(StreamType type, int source, int id)
+{
+  CSingleLock lock(m_section);
+  for (int i = m_Streams.size() - 1; i >= 0; i--)
+  {
+    if (type && m_Streams[i].type != type)
+      continue;
+
+    if (source && m_Streams[i].source != source)
+      continue;
+
+    if (source && m_Streams[i].id != id)
+      continue;
+
+    m_Streams.erase(m_Streams.begin() + i);
+  }
+}
+
 std::vector<SelectionStream> CSelectionStreams::Get(StreamType type)
 {
   std::vector<SelectionStream> streams;
@@ -3369,6 +3387,7 @@ bool CDVDPlayer::OpenStream(CCurrentStream& current, int iStream, int source, bo
       stream->disabled = true;
       stream->SetDiscard(AVDISCARD_ALL);
     }
+    m_SelectionStreams.Remove(current.type, source, iStream);
   }
 
   g_dataCacheCore.SignalAudioInfoChange();

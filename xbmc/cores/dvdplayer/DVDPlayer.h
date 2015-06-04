@@ -198,6 +198,7 @@ public:
   }
 
   void             Clear   (StreamType type, StreamSource source);
+  void             Remove  (StreamType type, int source, int id);
   int              Source  (StreamSource source, std::string filename);
 
   void             Update  (SelectionStream& s);
