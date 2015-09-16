@@ -175,7 +175,7 @@ void CBaseTexture::ClampToEdge()
   }
 }
 
-CBaseTexture *CBaseTexture::LoadFromFile(const std::string& texturePath, unsigned int idealWidth, unsigned int idealHeight, bool requirePixels, const std::string& strMimeType)
+CTextureArray *CBaseTexture::LoadFromFile(const std::string& texturePath, unsigned int idealWidth, unsigned int idealHeight, bool requirePixels, const std::string& strMimeType)
 {
 #if defined(TARGET_ANDROID)
   CURL url(texturePath);
@@ -209,9 +209,9 @@ CBaseTexture *CBaseTexture::LoadFromFile(const std::string& texturePath, unsigne
   return NULL;
 }
 
-CBaseTexture *CBaseTexture::LoadFromFileInMemory(unsigned char *buffer, size_t bufferSize, const std::string &mimeType, unsigned int idealWidth, unsigned int idealHeight)
+CTextureArray *CBaseTexture::LoadFromFileInMemory(unsigned char *buffer, size_t bufferSize, const std::string &mimeType, unsigned int idealWidth, unsigned int idealHeight)
 {
-  CTexture *texture = new CTexture();
+  CTextureArray *texture = new CTextureArray();
   if (texture->LoadFromFileInMem(buffer, bufferSize, mimeType, idealWidth, idealHeight))
     return texture;
   delete texture;

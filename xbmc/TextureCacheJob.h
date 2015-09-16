@@ -28,6 +28,8 @@
 #include "utils/Job.h"
 
 class CBaseTexture;
+class CTextureArray;
+
 
 /*!
  \ingroup textures
@@ -122,7 +124,7 @@ private:
    \param additional_info extra info for loading, such as whether to flip horizontally.
    \return a pointer to a CBaseTexture object, NULL if failed.
    */
-  static CBaseTexture *LoadImage(const std::string &image, unsigned int width, unsigned int height, const std::string &additional_info, bool requirePixels = false);
+  static CTextureArray *LoadImage(const std::string &image, unsigned int width, unsigned int height, const std::string &additional_info, bool requirePixels = false);
 
   std::string    m_cachePath;
 };

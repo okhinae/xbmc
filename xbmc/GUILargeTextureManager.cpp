@@ -79,7 +79,7 @@ bool CImageLoader::DoWork()
     return false; // We're done
 
   // not in our texture cache or it failed to load from it, so try and load directly and then cache the result
-  CTextureCache::GetInstance().CacheImage(texturePath, &m_texture);
+  CTextureCache::GetInstance().CacheImage(texturePath, &m_texture->m_textures[0]);
   return (m_texture != NULL);
 }
 
@@ -131,6 +131,16 @@ void CGUILargeTextureManager::CLargeTexture::SetTexture(CBaseTexture* texture)
   assert(!m_texture.size());
   if (texture)
     m_texture.Set(texture, texture->GetWidth(), texture->GetHeight());
+}
+
+void CGUILargeTextureManager::CLargeTexture::SetTexture(CTextureArray* texture)
+{
+  assert(!m_texture.size());
+  if (texture)
+  {
+    for (auto tex : texture->m_textures)
+      m_texture.Add(tex, 100);
+  }
 }
 
 CGUILargeTextureManager::CGUILargeTextureManager()

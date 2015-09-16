@@ -103,22 +103,22 @@ bool CTextureCacheJob::CacheTexture(CBaseTexture **out_texture)
     return true;
   }
 #endif
-  CBaseTexture *texture = LoadImage(image, width, height, additional_info, true);
+  CTextureArray *texture = LoadImage(image, width, height, additional_info, true);
   if (texture)
   {
-    if (texture->HasAlpha())
+    if (texture->m_textures[0]->HasAlpha())
       m_details.file = m_cachePath + ".png";
     else
       m_details.file = m_cachePath + ".jpg";
 
     CLog::Log(LOGDEBUG, "%s image '%s' to '%s':", m_oldHash.empty() ? "Caching" : "Recaching", image.c_str(), m_details.file.c_str());
 
-    if (CPicture::CacheTexture(texture, width, height, CTextureCache::GetCachedPath(m_details.file), scalingAlgorithm))
+    if (CPicture::CacheTexture(texture->m_textures[0], width, height, CTextureCache::GetCachedPath(m_details.file), scalingAlgorithm))
     {
       m_details.width = width;
       m_details.height = height;
       if (out_texture) // caller wants the texture
-        *out_texture = texture;
+        *out_texture = texture->m_textures[0];
       else
         delete texture;
       return true;
@@ -144,11 +144,11 @@ bool CTextureCacheJob::ResizeTexture(const std::string &url, uint8_t* &result, s
   if (image.empty())
     return false;
 
-  CBaseTexture *texture = LoadImage(image, width, height, additional_info, true);
+  CTextureArray *texture = LoadImage(image, width, height, additional_info, true);
   if (texture == NULL)
     return false;
 
-  bool success = CPicture::ResizeTexture(image, texture, width, height, result, result_size, scalingAlgorithm);
+  bool success = CPicture::ResizeTexture(image, texture->m_textures[0], width, height, result, result_size, scalingAlgorithm);
   delete texture;
 
   return success;
@@ -192,7 +192,7 @@ std::string CTextureCacheJob::DecodeImageURL(const std::string &url, unsigned in
   return image;
 }
 
-CBaseTexture *CTextureCacheJob::LoadImage(const std::string &image, unsigned int width, unsigned int height, const std::string &additional_info, bool requirePixels)
+CTextureArray *CTextureCacheJob::LoadImage(const std::string &image, unsigned int width, unsigned int height, const std::string &additional_info, bool requirePixels)
 {
   if (additional_info == "music")
   { // special case for embedded music images
@@ -208,7 +208,7 @@ CBaseTexture *CTextureCacheJob::LoadImage(const std::string &image, unsigned int
       && !StringUtils::StartsWithNoCase(file.GetMimeType(), "image/") && !StringUtils::EqualsNoCase(file.GetMimeType(), "application/octet-stream")) // ignore non-pictures
     return NULL;
 
-  CBaseTexture *texture = CBaseTexture::LoadFromFile(image, width, height, requirePixels, file.GetMimeType());
+  CTextureArray *texture = CBaseTexture::LoadFromFile(image, width, height, requirePixels, file.GetMimeType());
   if (!texture)
     return NULL;
 
@@ -216,7 +216,7 @@ CBaseTexture *CTextureCacheJob::LoadImage(const std::string &image, unsigned int
   // where to undo the operation we apply them in reverse order <flipX>*<flipY*flipX>*<flipXY>
   // When flipped we have an additional <flipX> on the left, which is equivalent to toggling the last bit
   if (additional_info == "flipped")
-    texture->SetOrientation(texture->GetOrientation() ^ 1);
+    texture->m_textures[0]->SetOrientation(texture->m_textures[0]->GetOrientation() ^ 1);
 
   return texture;
 }
@@ -269,12 +269,12 @@ bool CTextureDDSJob::DoWork()
 {
   if (URIUtils::HasExtension(m_original, ".dds"))
     return false;
-  CBaseTexture *texture = CBaseTexture::LoadFromFile(m_original);
+  CTextureArray *texture = CBaseTexture::LoadFromFile(m_original);
   if (texture)
   { // convert to DDS
     CDDSImage dds;
     CLog::Log(LOGDEBUG, "Creating DDS version of: %s", m_original.c_str());
-    bool ret = dds.Create(URIUtils::ReplaceExtension(m_original, ".dds"), texture->GetWidth(), texture->GetHeight(), texture->GetPitch(), texture->GetPixels(), 40);
+    bool ret = dds.Create(URIUtils::ReplaceExtension(m_original, ".dds"), texture->m_textures[0]->GetWidth(), texture->m_textures[0]->GetHeight(), texture->m_textures[0]->GetPitch(), texture->m_textures[0]->GetPixels(), 40);
     delete texture;
     return ret;
   }

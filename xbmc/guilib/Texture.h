@@ -23,6 +23,7 @@
 #include "system.h"
 #include "XBTF.h"
 #include "guilib/imagefactory.h"
+#include "TextureManager.h"
 
 #pragma pack(1)
 struct COLOR {unsigned char b,g,r,x;};	// Windows GDI expects 4bytes per color
@@ -54,7 +55,7 @@ public:
    \param strMimeType mimetype of the given texture if available (defaults to empty)
    \return a CBaseTexture pointer to the created texture - NULL if the texture failed to load.
    */
-  static CBaseTexture *LoadFromFile(const std::string& texturePath, unsigned int idealWidth = 0, unsigned int idealHeight = 0,
+  static CTextureArray *LoadFromFile(const std::string& texturePath, unsigned int idealWidth = 0, unsigned int idealHeight = 0,
                                     bool requirePixels = false, const std::string& strMimeType = "");
 
   /*! \brief Load a texture from a file in memory
@@ -67,7 +68,7 @@ public:
    \param idealHeight the ideal height of the texture (defaults to 0, no ideal height).
    \return a CBaseTexture pointer to the created texture - NULL if the texture failed to load.
    */
-  static CBaseTexture *LoadFromFileInMemory(unsigned char* buffer, size_t bufferSize, const std::string& mimeType,
+  static CTextureArray *LoadFromFileInMemory(unsigned char* buffer, size_t bufferSize, const std::string& mimeType,
                                             unsigned int idealWidth = 0, unsigned int idealHeight = 0);
 
   bool LoadFromMemory(unsigned int width, unsigned int height, unsigned int pitch, unsigned int format, bool hasAlpha, unsigned char* pixels);
