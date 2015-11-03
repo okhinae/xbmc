@@ -3234,6 +3234,9 @@
     <ClCompile Include="..\..\xbmc\cores\dvdplayer\DVDDemuxers\DVDDemuxMultiSource.cpp">
       <Filter>cores\dvdplayer\DVDDemuxers</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\xbmc\cores\dvdplayer\DVDInputStreams\DVDInputStreamMpegDash.cpp">
+      <Filter>cores\dvdplayer\DVDInputStreams</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\xbmc\win32\pch.h">
@@ -6273,6 +6276,9 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\cores\dvdplayer\DVDDemuxers\DVDDemuxMultiSource.h">
       <Filter>cores\dvdplayer\DVDDemuxers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\cores\dvdplayer\DVDInputStreams\DVDInputStreamMpegDash.h">
+      <Filter>cores\dvdplayer\DVDInputStreams</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
