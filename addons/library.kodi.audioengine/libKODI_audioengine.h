@@ -293,11 +293,6 @@ public:
   */
   virtual const unsigned int GetSampleRate() const;
 
-  /**
-  * Returns the stream's encoded sample rate if the stream is RAW
-  * @return The stream's encoded sample rate
-  */
-  virtual const unsigned int GetEncodedSampleRate() const;
 
   /**
   * Return the data format the stream has been configured with

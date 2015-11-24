@@ -835,7 +835,7 @@ void CAESinkWASAPI::EnumerateDevicesEx(AEDeviceInfoList &deviceInfoList, bool fo
         {
           if (k > 3) // Add only multichannel LPCM
           {
-            deviceInfo.m_dataFormats.push_back(AE_FMT_LPCM);
+            deviceInfo.m_dataFormats.push_back(AE_FMT_RAW);
             hasLpcm = true;
           }
           break;
@@ -854,7 +854,7 @@ void CAESinkWASAPI::EnumerateDevicesEx(AEDeviceInfoList &deviceInfoList, bool fo
         {
           if ( !hasLpcm && k > 3) // Add only multichannel LPCM
           {
-            deviceInfo.m_dataFormats.push_back(AE_FMT_LPCM);
+            deviceInfo.m_dataFormats.push_back(AE_FMT_RAW);
             hasLpcm = true;
           }
           break;
@@ -876,7 +876,7 @@ void CAESinkWASAPI::EnumerateDevicesEx(AEDeviceInfoList &deviceInfoList, bool fo
             deviceChannels = layoutsList[i];
           if ( !hasLpcm && nmbOfCh > 3) // Add only multichannel LPCM
           {
-            deviceInfo.m_dataFormats.push_back(AE_FMT_LPCM);
+            deviceInfo.m_dataFormats.push_back(AE_FMT_RAW);
             hasLpcm = true;
           }
         }
@@ -885,8 +885,8 @@ void CAESinkWASAPI::EnumerateDevicesEx(AEDeviceInfoList &deviceInfoList, bool fo
 
       if (hasLpcm == false && aeDeviceType == AE_DEVTYPE_HDMI)
       {
-        CLog::Log(LOGNOTICE, __FUNCTION__": data format \"%s\" on device \"%s\" seems to be not supported.", CAEUtil::DataFormatToStr(AE_FMT_LPCM), strFriendlyName.c_str());
-        deviceInfo.m_dataFormats.push_back(AE_FMT_LPCM);
+        CLog::Log(LOGNOTICE, __FUNCTION__": data format \"%s\" on device \"%s\" seems to be not supported.", CAEUtil::DataFormatToStr(AE_FMT_RAW), strFriendlyName.c_str());
+        deviceInfo.m_dataFormats.push_back(AE_FMT_RAW);
       }
     }
     else
@@ -1169,7 +1169,7 @@ initialize:
   /* parameters, so store the encoded stream values here for the IsCompatible function */
   m_encodedFormat     = format.m_dataFormat;
   m_encodedChannels   = wfxex.Format.nChannels;
-  m_encodedSampleRate = format.m_encodedRate;
+
   wfxex_iec61937.dwEncodedChannelCount = wfxex.Format.nChannels;
   wfxex_iec61937.dwEncodedSamplesPerSec = m_encodedSampleRate;
 
