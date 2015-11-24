@@ -76,7 +76,7 @@ class CDemuxStream
 public:
   CDemuxStream()
   {
-    iId = 0;
+    iId = NewGuid();
     iPhysicalId = 0;
     codec = (AVCodecID)0; // AV_CODEC_ID_NONE
     codec_fourcc = 0;
@@ -108,8 +108,7 @@ public:
 
   virtual void      SetDiscard(AVDiscard discard);
   virtual AVDiscard GetDiscard();
-
-  int iId;         // most of the time starting from 0
+  int64_t iId;         // most of the time starting from 0
   int iPhysicalId; // id
   AVCodecID codec;
   unsigned int codec_fourcc; // if available
@@ -140,6 +139,9 @@ public:
   , FLAG_HEARING_IMPAIRED = 0x0080
   , FLAG_VISUAL_IMPAIRED  = 0x0100
   } flags;
+
+private:
+  static int64_t NewGuid();
 };
 
 class CDemuxStreamVideo : public CDemuxStream
@@ -309,9 +311,15 @@ public:
   virtual int GetStreamLength() = 0;
 
   /*
-   * returns the stream or NULL on error, starting from 0
+   * returns the stream or NULL on error
    */
-  virtual CDemuxStream* GetStream(int iStreamId) = 0;
+  virtual CDemuxStream* GetStream(int64_t iStreamId) = 0;
+
+  virtual const std::vector<CDemuxStream*> GetStreams() const 
+  {
+    const std::vector<CDemuxStream*> streams;
+    return streams;
+  }
 
   /*
    * return nr of streams, 0 if none
@@ -375,5 +383,9 @@ public:
   /*
    * return a user-presentable codec name of the given stream
    */
-  virtual void GetStreamCodecName(int iStreamId, std::string &strName) {};
+  virtual void GetStreamCodecName(int64_t iStreamId, std::string &strName) {};
+
+  protected:
+    int GetNrOfStreams(StreamType streamType);
+    CDemuxStream* CDVDDemux::GetStreamFromId(int index, StreamType streamType);
 };
