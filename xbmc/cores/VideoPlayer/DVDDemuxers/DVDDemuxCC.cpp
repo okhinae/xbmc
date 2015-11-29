@@ -108,9 +108,13 @@ CDVDDemuxCC::~CDVDDemuxCC()
   Dispose();
 }
 
-CDemuxStream* CDVDDemuxCC::GetStream(int iStreamId)
+CDemuxStream* CDVDDemuxCC::GetStream(int64_t iStreamId)
 {
-  return &m_streams[iStreamId];
+  auto it = m_stream_index.find(iStreamId);
+  if (it == m_stream_index.end())
+    return nullptr;
+
+  return &(*it->second);
 }
 
 int CDVDDemuxCC::GetNrOfStreams()
