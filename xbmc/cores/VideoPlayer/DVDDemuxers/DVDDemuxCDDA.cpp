@@ -166,9 +166,9 @@ int CDVDDemuxCDDA::GetStreamLength()
   return (int)track_mseconds;
 }
 
-CDemuxStream* CDVDDemuxCDDA::GetStream(int iStreamId)
+CDemuxStream* CDVDDemuxCDDA::GetStream(int64_t iStreamId)
 {
-  if(iStreamId != 0)
+  if(!m_stream || (iStreamId != m_stream->iId))
     return NULL;
 
   return m_stream;
@@ -187,8 +187,8 @@ std::string CDVDDemuxCDDA::GetFileName()
     return "";
 }
 
-void CDVDDemuxCDDA::GetStreamCodecName(int iStreamId, std::string &strName)
+void CDVDDemuxCDDA::GetStreamCodecName(int64_t iStreamId, std::string &strName)
 {
-  if (m_stream && iStreamId == 0)
+  if (m_stream && iStreamId == m_stream->iId)
     strName = "pcm";
 }
