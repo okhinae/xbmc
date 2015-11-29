@@ -162,7 +162,7 @@ DemuxPacket* CDVDDemuxBXA::Read()
   return pPacket;
 }
 
-CDemuxStream* CDVDDemuxBXA::GetStream(int iStreamId)
+CDemuxStream* CDVDDemuxBXA::GetStream(int64_t iStreamId)
 {
   if(iStreamId != 0)
     return NULL;
@@ -183,7 +183,7 @@ std::string CDVDDemuxBXA::GetFileName()
     return "";
 }
 
-void CDVDDemuxBXA::GetStreamCodecName(int iStreamId, std::string &strName)
+void CDVDDemuxBXA::GetStreamCodecName(int64_t iStreamId, std::string &strName)
 {
   if (m_stream && iStreamId == 0)
     strName = "BXA";
