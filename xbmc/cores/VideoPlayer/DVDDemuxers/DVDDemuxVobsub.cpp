@@ -42,6 +42,15 @@ CDVDDemuxVobsub::~CDVDDemuxVobsub()
   m_Streams.clear();
 }
 
+CDemuxStream* CDVDDemuxVobsub::GetStream(int64_t iStreamId)
+{
+  auto it = m_stream_index.find(iStreamId);
+  if (it == m_stream_index.end())
+    return nullptr;
+
+  return *(it->second);
+}
+
 bool CDVDDemuxVobsub::Open(const std::string& filename, int source, const std::string& subfilename)
 {
   m_Filename = filename;
