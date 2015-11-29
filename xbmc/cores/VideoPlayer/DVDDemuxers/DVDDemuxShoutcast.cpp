@@ -178,9 +178,12 @@ int CDVDDemuxShoutcast::GetStreamLength()
   return 0;
 }
 
-CDemuxStream* CDVDDemuxShoutcast::GetStream(int iStreamId)
+CDemuxStream* CDVDDemuxShoutcast::GetStream(int64_t iStreamId)
 {
-  return m_pDemuxStream;
+  if (m_pDemuxStream && iStreamId == m_pDemuxStream->iId)
+    return m_pDemuxStream;
+  else
+    return nullptr;
 }
 
 int CDVDDemuxShoutcast::GetNrOfStreams()
