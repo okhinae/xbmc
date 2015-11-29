@@ -1003,14 +1003,28 @@ int CDVDDemuxFFmpeg::GetStreamLength()
 }
 
 /**
- * @brief Finds stream based on demuxer index
- */
-CDemuxStream* CDVDDemuxFFmpeg::GetStream(int iStreamId)
+* @brief Finds stream based on it's guid
+*/
+CDemuxStream* CDVDDemuxFFmpeg::GetStream(int64_t iStreamId)
 {
-  if(iStreamId >= 0 && (size_t)iStreamId < m_stream_index.size())
-    return m_stream_index[iStreamId]->second;
-  else
-    return NULL;
+  auto it = m_stream_index.find(iStreamId);
+  if (it == m_stream_index.end())
+    return nullptr;
+
+  return it->second->second;
+}
+
+/**
+* @brief returns a const container of stream pointers
+*/
+const std::vector<CDemuxStream*> CDVDDemuxFFmpeg::GetStreams() const
+{
+  std::vector<CDemuxStream*> streams;
+
+  for (auto& iter : m_streams)
+    streams.push_back(iter.second);
+
+  return streams;
 }
 
 /**
@@ -1369,8 +1383,7 @@ void CDVDDemuxFFmpeg::AddStream(int iId, CDemuxStream* stream)
   if(res.second)
   {
     /* was new stream */
-    stream->iId = m_stream_index.size();
-    m_stream_index.push_back(res.first);
+    m_stream_index[stream->iId] = res.first;
   }
   else
   {
@@ -1491,7 +1504,7 @@ bool CDVDDemuxFFmpeg::SeekChapter(int chapter, double* startpts)
   return SeekTime(DVD_TIME_TO_MSEC(dts), true, startpts);
 }
 
-void CDVDDemuxFFmpeg::GetStreamCodecName(int iStreamId, std::string &strName)
+void CDVDDemuxFFmpeg::GetStreamCodecName(int64_t iStreamId, std::string &strName)
 {
   CDemuxStream *stream = GetStream(iStreamId);
   if (stream)
