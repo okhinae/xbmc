@@ -133,7 +133,7 @@ void CTextureCache::BackgroundCacheImage(const std::string &url)
   AddJob(new CTextureCacheJob(CTextureUtils::UnwrapImageURL(url), details.hash));
 }
 
-std::string CTextureCache::CacheImage(const std::string &image, CBaseTexture **texture /* = NULL */, CTextureDetails *details /* = NULL */)
+std::string CTextureCache::CacheImage(const std::string &image, CTextureArray **texture /* = NULL */, CTextureDetails *details /* = NULL */)
 {
   std::string url = CTextureUtils::UnwrapImageURL(image);
   CSingleLock lock(m_processingSection);

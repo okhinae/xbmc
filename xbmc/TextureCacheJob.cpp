@@ -36,6 +36,8 @@
 #if defined(HAS_OMXPLAYER)
 #include "cores/omxplayer/OMXImage.h"
 #endif
+#include "guilib/TextureManager.h"
+#include "guilib/Gif.h"
 
 CTextureCacheJob::CTextureCacheJob(const std::string &url, const std::string &oldHash):
   m_url(url),
@@ -74,7 +76,7 @@ bool CTextureCacheJob::DoWork()
   return CacheTexture();
 }
 
-bool CTextureCacheJob::CacheTexture(CBaseTexture **out_texture)
+bool CTextureCacheJob::CacheTexture(CTextureArray **out_texture)
 {
   // unwrap the URL as required
   std::string additional_info;
@@ -103,26 +105,44 @@ bool CTextureCacheJob::CacheTexture(CBaseTexture **out_texture)
     return true;
   }
 #endif
-  CBaseTexture *texture = LoadImage(image, width, height, additional_info, true);
-  if (texture)
+
+  CTextureArray *texture = LoadImage(image, width, height, additional_info, true);
+  if (texture && texture->m_textures.size() == 1)
   {
-    if (texture->HasAlpha())
+    if (texture->m_textures[0]->HasAlpha())
       m_details.file = m_cachePath + ".png";
     else
       m_details.file = m_cachePath + ".jpg";
 
     CLog::Log(LOGDEBUG, "%s image '%s' to '%s':", m_oldHash.empty() ? "Caching" : "Recaching", CURL::GetRedacted(image).c_str(), m_details.file.c_str());
 
-    if (CPicture::CacheTexture(texture, width, height, CTextureCache::GetCachedPath(m_details.file), scalingAlgorithm))
+    if (CPicture::CacheTexture(texture->m_textures[0], width, height, CTextureCache::GetCachedPath(m_details.file), scalingAlgorithm))
     {
       m_details.width = width;
       m_details.height = height;
       if (out_texture) // caller wants the texture
+      {
         *out_texture = texture;
+      }
       else
         delete texture;
       return true;
     }
+  }
+  else if (texture && texture->m_textures.size() > 1)
+  {
+    m_details.file = m_cachePath + ".gif";
+    XFILE::CFile file;
+    file.Copy(image, CTextureCache::GetCachedPath(m_details.file));
+    m_details.width = width;
+    m_details.height = height;
+    if (out_texture) // caller wants the texture
+    {
+      *out_texture = texture;
+    }
+    else
+      delete texture;
+    return true;
   }
   delete texture;
   return false;
@@ -144,11 +164,11 @@ bool CTextureCacheJob::ResizeTexture(const std::string &url, uint8_t* &result, s
   if (image.empty())
     return false;
 
-  CBaseTexture *texture = LoadImage(image, width, height, additional_info, true);
-  if (texture == NULL)
+  CTextureArray *texture = LoadImage(image, width, height, additional_info, true);
+  if (texture == NULL || texture->m_textures.empty() || texture->m_textures.size() > 1)
     return false;
 
-  bool success = CPicture::ResizeTexture(image, texture, width, height, result, result_size, scalingAlgorithm);
+  bool success = CPicture::ResizeTexture(image, texture->m_textures[0], width, height, result, result_size, scalingAlgorithm);
   delete texture;
 
   return success;
@@ -192,13 +212,18 @@ std::string CTextureCacheJob::DecodeImageURL(const std::string &url, unsigned in
   return image;
 }
 
-CBaseTexture *CTextureCacheJob::LoadImage(const std::string &image, unsigned int width, unsigned int height, const std::string &additional_info, bool requirePixels)
+CTextureArray *CTextureCacheJob::LoadImage(const std::string &image, unsigned int width, unsigned int height, const std::string &additional_info, bool requirePixels)
 {
   if (additional_info == "music")
   { // special case for embedded music images
     MUSIC_INFO::EmbeddedArt art;
     if (CMusicThumbLoader::GetEmbeddedThumb(image, art))
-      return CBaseTexture::LoadFromFileInMemory(&art.data[0], art.size, art.mime, width, height);
+    {
+      CBaseTexture * tex = CBaseTexture::LoadFromFileInMemory(&art.data[0], art.size, art.mime, width, height);
+      CTextureArray* arry = new CTextureArray(tex->GetTextureWidth(), tex->GetTextureHeight(), 0);
+      arry->Add(tex, 0);
+      return arry;
+    }
   }
 
   // Validate file URL to see if it is an image
@@ -207,6 +232,39 @@ CBaseTexture *CTextureCacheJob::LoadImage(const std::string &image, unsigned int
   if (!(file.IsPicture() && !(file.IsZIP() || file.IsRAR() || file.IsCBR() || file.IsCBZ() ))
       && !StringUtils::StartsWithNoCase(file.GetMimeType(), "image/") && !StringUtils::EqualsNoCase(file.GetMimeType(), "application/octet-stream")) // ignore non-pictures
     return NULL;
+
+  if (StringUtils::EndsWithNoCase(image, ".gif"))
+  {
+#if defined(HAS_GIFLIB)
+    Gif gif;
+    if (!gif.LoadGif(image.c_str()))
+    {
+      CLog::Log(LOGERROR, "Texture manager unable to load file: %s", image.c_str());
+      return nullptr;
+    }
+
+    unsigned int maxWidth = 0;
+    unsigned int maxHeight = 0;
+    CTextureArray* arry = new CTextureArray(gif.Width(), gif.Height(), gif.GetNumLoops());
+
+    for (auto frame : gif.GetFrames())
+    {
+      CTexture *glTexture = new CTexture();
+      if (glTexture)
+      {
+        glTexture->LoadFromMemory(gif.Width(), gif.Height(), gif.GetPitch(), XB_FMT_A8R8G8B8, false, frame->m_pImage);
+        arry->Add(glTexture, frame->m_delay);
+        maxWidth = std::max(maxWidth, glTexture->GetWidth());
+        maxHeight = std::max(maxHeight, glTexture->GetHeight());
+      }
+    }
+
+    arry->m_width = ((int)maxWidth);
+    arry->m_height = ((int)maxHeight);
+    return arry;
+#endif//HAS_GIFLIB
+  }
+
 
   CBaseTexture *texture = CBaseTexture::LoadFromFile(image, width, height, requirePixels, file.GetMimeType());
   if (!texture)
@@ -218,7 +276,10 @@ CBaseTexture *CTextureCacheJob::LoadImage(const std::string &image, unsigned int
   if (additional_info == "flipped")
     texture->SetOrientation(texture->GetOrientation() ^ 1);
 
-  return texture;
+  CTextureArray* arry = new CTextureArray(texture->GetTextureWidth(), texture->GetTextureHeight(), 0);
+  arry->Add(texture, 0);
+
+  return arry;
 }
 
 bool CTextureCacheJob::UpdateableURL(const std::string &url) const

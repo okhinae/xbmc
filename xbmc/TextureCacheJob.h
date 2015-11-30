@@ -28,6 +28,7 @@
 #include "utils/Job.h"
 
 class CBaseTexture;
+class CTextureArray;
 
 /*!
  \ingroup textures
@@ -77,7 +78,7 @@ public:
    \param url location of the image
    \return a hash string for this image
    */
-  bool CacheTexture(CBaseTexture **texture = NULL);
+  bool CacheTexture(CTextureArray **texture = NULL);
 
   static bool ResizeTexture(const std::string &url, uint8_t* &result, size_t &result_size);
 
@@ -122,7 +123,7 @@ private:
    \param additional_info extra info for loading, such as whether to flip horizontally.
    \return a pointer to a CBaseTexture object, NULL if failed.
    */
-  static CBaseTexture *LoadImage(const std::string &image, unsigned int width, unsigned int height, const std::string &additional_info, bool requirePixels = false);
+  static CTextureArray *LoadImage(const std::string &image, unsigned int width, unsigned int height, const std::string &additional_info, bool requirePixels = false);
 
   std::string    m_cachePath;
 };

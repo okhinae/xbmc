@@ -30,11 +30,12 @@
 #include "TextureCache.h"
 
 #include <cassert>
+#include "guilib/Gif.h"
 
 CImageLoader::CImageLoader(const std::string &path, const bool useCache):
   m_path(path)
 {
-  m_texture = NULL;
+  m_texture = new CTextureArray();
   m_use_cache = useCache;
 }
 
@@ -58,7 +59,50 @@ bool CImageLoader::DoWork()
   {
     // direct route - load the image
     unsigned int start = XbmcThreads::SystemClockMillis();
-    m_texture = CBaseTexture::LoadFromFile(loadPath, g_graphicsContext.GetWidth(), g_graphicsContext.GetHeight());
+
+    if (StringUtils::EndsWithNoCase(loadPath, ".gif"))
+    {
+#if defined(HAS_GIFLIB)
+      Gif gif;
+      if (!gif.LoadGif(loadPath.c_str()))
+      {
+        CLog::Log(LOGERROR, "Texture manager unable to load file: %s", loadPath.c_str());
+        return nullptr;
+      }
+
+      unsigned int maxWidth = 0;
+      unsigned int maxHeight = 0;
+
+      for (auto frame : gif.GetFrames())
+      {
+        CTexture *glTexture = new CTexture();
+        if (glTexture)
+        {
+          glTexture->LoadFromMemory(gif.Width(), gif.Height(), gif.GetPitch(), XB_FMT_A8R8G8B8, false, frame->m_pImage);
+          m_texture->Add(glTexture, frame->m_delay);
+          maxWidth = std::max(maxWidth, glTexture->GetWidth());
+          maxHeight = std::max(maxHeight, glTexture->GetHeight());
+        }
+      }
+
+      m_texture->m_width = ((int)maxWidth);
+      m_texture->m_height = ((int)maxHeight);
+      m_texture->m_loops = gif.GetNumLoops();
+
+#endif//HAS_GIFLIB
+    }
+
+     CBaseTexture* tex = CBaseTexture::LoadFromFile(loadPath, g_graphicsContext.GetWidth(), g_graphicsContext.GetHeight());
+     if (tex)
+     {
+	     m_texture->Add(tex, 0);
+	     m_texture->m_width = tex->GetTextureWidth();
+	     m_texture->m_height = tex->GetTextureHeight();
+     } 
+     else
+     {
+       CLog::Log(LOGERROR, "%s - Direct texture file loading failed for %s", __FUNCTION__, loadPath.c_str());
+     }
 
     if (XbmcThreads::SystemClockMillis() - start > 100)
       CLog::Log(LOGDEBUG, "%s - took %u ms to load %s", __FUNCTION__, XbmcThreads::SystemClockMillis() - start, loadPath.c_str());
@@ -126,11 +170,20 @@ bool CGUILargeTextureManager::CLargeTexture::DeleteIfRequired(bool deleteImmedia
   return false;
 }
 
-void CGUILargeTextureManager::CLargeTexture::SetTexture(CBaseTexture* texture)
+void CGUILargeTextureManager::CLargeTexture::SetTexture(CTextureArray* texture)
 {
   assert(!m_texture.size());
   if (texture)
-    m_texture.Set(texture, texture->GetWidth(), texture->GetHeight());
+  {
+    for (int i = 0; i < texture->m_textures.size(); ++i)
+    {
+      m_texture.Add(texture->m_textures[i], texture->m_delays[i]);
+    }
+
+    m_texture.m_width = texture->m_width;
+    m_texture.m_height = texture->m_height;
+    m_texture.m_orientation = texture->m_orientation;
+  }
 }
 
 CGUILargeTextureManager::CGUILargeTextureManager()
