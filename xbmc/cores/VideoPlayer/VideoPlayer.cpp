@@ -4311,7 +4311,7 @@ void CVideoPlayer::GetVideoStreamInfo(int streamId, SPlayerVideoStreamInfo &info
   if (streamId == CURRENT_STREAM)
     streamId = GetVideoStream();
 
-  if (streamId < 0 || streamId > GetAudioStreamCount() - 1)
+  if (streamId < 0 || streamId > GetVideoStreamCount() - 1)
     return;
 
   if (streamId == GetVideoStream())
