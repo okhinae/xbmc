@@ -37,6 +37,7 @@ public:
   virtual BitstreamStats GetBitstreamStats() const ;
   virtual int GetBlockSize();
   virtual void SetReadRate(unsigned rate);
+  virtual ENextStream NextStream() override;
   virtual bool GetCacheStatus(XFILE::SCacheStatus *status);
 
 protected:

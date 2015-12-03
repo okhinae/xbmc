@@ -190,3 +190,15 @@ void CDVDInputStreamFile::SetReadRate(unsigned rate)
   if(m_pFile->IoControl(IOCTRL_CACHE_SETRATE, &maxrate) >= 0)
     CLog::Log(LOGDEBUG, "CDVDInputStreamFile::SetReadRate - set cache throttle rate to %u bytes per second", maxrate);
 }
+
+CDVDInputStream::ENextStream CDVDInputStreamFile::NextStream()
+{
+  static bool loop = true;
+  if (loop)
+  {
+    if (!Seek(0,0))
+      return NEXTSTREAM_OPEN;
+  }
+
+  return NEXTSTREAM_NONE;
+}
