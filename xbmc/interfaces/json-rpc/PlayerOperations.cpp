@@ -929,22 +929,24 @@ JSONRPC_STATUS CPlayerOperations::SetAudioStream(const std::string &method, ITra
   switch (GetPlayer(parameterObject["playerid"]))
   {
     case Video:
-      if (g_application.m_pPlayer->HasPlayer())
+    {
+      int index = g_application.m_pPlayer->GetAudioStream();
+      int streamCount = g_application.m_pPlayer->GetAudioStreamCount();
+      if (index >= 0 && streamCount >= 0)
       {
-        int index = -1;
         if (parameterObject["stream"].isString())
         {
           std::string action = parameterObject["stream"].asString();
           if (action.compare("previous") == 0)
           {
-            index = g_application.m_pPlayer->GetAudioStream() - 1;
+            index--;
             if (index < 0)
-              index = g_application.m_pPlayer->GetAudioStreamCount() - 1;
+              index = streamCount - 1;
           }
           else if (action.compare("next") == 0)
           {
-            index = g_application.m_pPlayer->GetAudioStream() + 1;
-            if (index >= g_application.m_pPlayer->GetAudioStreamCount())
+            index++;
+            if (index >= streamCount)
               index = 0;
           }
           else
@@ -953,7 +955,7 @@ JSONRPC_STATUS CPlayerOperations::SetAudioStream(const std::string &method, ITra
         else if (parameterObject["stream"].isInteger())
           index = (int)parameterObject["stream"].asInteger();
 
-        if (index < 0 || g_application.m_pPlayer->GetAudioStreamCount() <= index)
+        if (index < 0 || streamCount <= index)
           return InvalidParams;
 
         g_application.m_pPlayer->SetAudioStream(index);
@@ -961,7 +963,7 @@ JSONRPC_STATUS CPlayerOperations::SetAudioStream(const std::string &method, ITra
       else
         return FailedToExecute;
       break;
-      
+    }
     case Audio:
     case Picture:
     default:
@@ -1496,27 +1498,26 @@ JSONRPC_STATUS CPlayerOperations::GetPropertyValue(PlayerType player, const std:
     {
       case Video:
       case Audio:
-        if (g_application.m_pPlayer->HasPlayer())
+      {
+        int index = g_application.m_pPlayer->GetAudioStream();
+        if (index >= 0)
         {
           result = CVariant(CVariant::VariantTypeObject);
-          int index = g_application.m_pPlayer->GetAudioStream();
-          if (index >= 0)
-          {
-            SPlayerAudioStreamInfo info;
-            g_application.m_pPlayer->GetAudioStreamInfo(index, info);
 
-            result["index"] = index;
-            result["name"] = info.name;
-            result["language"] = info.language;
-            result["codec"] = info.audioCodecName;
-            result["bitrate"] = info.bitrate;
-            result["channels"] = info.channels;
-          }
+          SPlayerAudioStreamInfo info;
+          g_application.m_pPlayer->GetAudioStreamInfo(index, info);
+
+          result["index"] = index;
+          result["name"] = info.name;
+          result["language"] = info.language;
+          result["codec"] = info.audioCodecName;
+          result["bitrate"] = info.bitrate;
+          result["channels"] = info.channels;
         }
         else
           result = CVariant(CVariant::VariantTypeNull);
         break;
-        
+      }
       case Picture:
       default:
         result = CVariant(CVariant::VariantTypeNull);
@@ -1529,9 +1530,11 @@ JSONRPC_STATUS CPlayerOperations::GetPropertyValue(PlayerType player, const std:
     switch (player)
     {
       case Video:
-        if (g_application.m_pPlayer->HasPlayer())
+      {
+        int streamCount = g_application.m_pPlayer->GetAudioStreamCount();
+        if (streamCount >= 0)
         {
-          for (int index = 0; index < g_application.m_pPlayer->GetAudioStreamCount(); index++)
+          for (int index = 0; index < streamCount; index++)
           {
             SPlayerAudioStreamInfo info;
             g_application.m_pPlayer->GetAudioStreamInfo(index, info);
@@ -1547,11 +1550,14 @@ JSONRPC_STATUS CPlayerOperations::GetPropertyValue(PlayerType player, const std:
             result.append(audioStream);
           }
         }
+        else
+          result = CVariant(CVariant::VariantTypeNull);
         break;
-        
+      }
       case Audio:
       case Picture:
       default:
+        result = CVariant(CVariant::VariantTypeNull);
         break;
     }
   }

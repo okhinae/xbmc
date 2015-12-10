@@ -482,11 +482,11 @@ namespace XBMCAddon
 
     std::vector<String> Player::getAvailableAudioStreams()
     {
-      if (g_application.m_pPlayer->HasPlayer())
+      int streamCount = g_application.m_pPlayer->GetAudioStreamCount();
+      if (streamCount > 0)
       {
-        int streamCount = g_application.m_pPlayer->GetAudioStreamCount();
         std::vector<String> ret(streamCount);
-        for (int iStream=0; iStream < streamCount; iStream++)
+        for (int iStream = 0; iStream < streamCount; iStream++)
         {
           SPlayerAudioStreamInfo info;
           g_application.m_pPlayer->GetAudioStreamInfo(iStream, info);

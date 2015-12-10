@@ -365,7 +365,7 @@ int CApplicationPlayer::GetAudioStream()
     return m_iAudioStream;
   }
   else
-    return 0;
+    return -1;
 }
 
 int CApplicationPlayer::GetSubtitle()
@@ -533,7 +533,7 @@ int  CApplicationPlayer::GetAudioStreamCount()
   if (player)
     return player->GetAudioStreamCount();
   else
-    return 0;
+    return -1;
 }
 
 void CApplicationPlayer::SetAudioStream(int iStream)
