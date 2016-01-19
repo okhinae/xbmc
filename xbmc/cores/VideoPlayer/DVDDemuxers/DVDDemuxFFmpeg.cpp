@@ -1524,50 +1524,14 @@ std::string CDVDDemuxFFmpeg::GetStreamCodecName(int iStreamId)
   std::string strName;
   if (stream)
   {
-    unsigned int in = stream->codec_fourcc;
-    // FourCC codes are only valid on video streams, audio codecs in AVI/WAV
-    // are 2 bytes and audio codecs in transport streams have subtle variation
-    // e.g AC-3 instead of ac3
-    if (stream->type == STREAM_VIDEO && in != 0)
-    {
-      char fourcc[5];
-#if defined(__powerpc__)
-      fourcc[0] = in & 0xff;
-      fourcc[1] = (in >> 8) & 0xff;
-      fourcc[2] = (in >> 16) & 0xff;
-      fourcc[3] = (in >> 24) & 0xff;
-#else
-      memcpy(fourcc, &in, 4);
-#endif
-      fourcc[4] = 0;
-      // fourccs have to be 4 characters
-      if (strlen(fourcc) == 4)
-      {
-        strName = fourcc;
-        StringUtils::ToLower(strName);
-        return strName;
-      }
-    }
-
-#ifdef FF_PROFILE_DTS_HD_MA
-    /* use profile to determine the DTS type */
     if (stream->codec == AV_CODEC_ID_DTS)
     {
-      if (stream->profile == FF_PROFILE_DTS_HD_MA)
-        strName = "dtshd_ma";
-      else if (stream->profile == FF_PROFILE_DTS_HD_HRA)
-        strName = "dtshd_hra";
-      else
-        strName = "dca";
-
-      return strName;
+      strName = stream->profile_name;
     }
-#endif
+    else
+      strName = stream->codec_name;
 
-    strName = avcodec_get_name(stream->codec);
-    AVCodec *codec = avcodec_find_decoder(stream->codec);
-    if (codec)
-      strName = codec->name;
+    StringUtils::ToLower(strName);
   }
   return strName;
 }
