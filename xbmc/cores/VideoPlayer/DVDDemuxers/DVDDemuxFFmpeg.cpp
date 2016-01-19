@@ -1144,6 +1144,9 @@ CDemuxStream* CDVDDemuxFFmpeg::AddStream(int iId)
         st->iBitRate = pStream->codec->bit_rate;
         st->iBitsPerSample = pStream->codec->bits_per_raw_sample;
         st->iChannelLayout = pStream->codec->channel_layout;
+        char buf[32] = { 0 };
+        av_get_channel_layout_string(buf, 31, st->iChannels, st->iChannelLayout);
+        st->m_channelLayout = buf;
         if (st->iBitsPerSample == 0)
           st->iBitsPerSample = pStream->codec->bits_per_coded_sample;
 	
@@ -1322,6 +1325,9 @@ CDemuxStream* CDVDDemuxFFmpeg::AddStream(int iId)
     stream->profile = pStream->codec->profile;
     stream->level   = pStream->codec->level;
     stream->realtime = m_pInput->IsRealtime();
+    stream->codec_name = avcodec_get_name(stream->codec);
+    if (stream->profile != FF_PROFILE_UNKNOWN)
+      stream->profile_name = av_get_profile_name(avcodec_find_decoder(pStream->codec->codec_id), stream->profile);
 
     stream->source = STREAM_SOURCE_DEMUX;
     stream->pPrivate = pStream;
@@ -1558,6 +1564,7 @@ std::string CDVDDemuxFFmpeg::GetStreamCodecName(int iStreamId)
     }
 #endif
 
+    strName = avcodec_get_name(stream->codec);
     AVCodec *codec = avcodec_find_decoder(stream->codec);
     if (codec)
       strName = codec->name;
