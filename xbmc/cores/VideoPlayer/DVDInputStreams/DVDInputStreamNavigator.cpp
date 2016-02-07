@@ -409,7 +409,20 @@ int CDVDInputStreamNavigator::ProcessBlock(uint8_t* dest_buffer, int* read)
         //event->logical = dvdnav_get_audio_logical_stream(m_dvdnav, event->physical);
         //logical should actually be set to the (vm->state).AST_REG
 
+        int8_t au = m_dll.dvdnav_get_audio_logical_stream(m_dvdnav, event->physical);
+        int log = event->logical;
+
         event->logical = GetActiveAudioStream();
+
+        if (au != event->logical)
+        {
+          CLog::Log(LOGINFO, "t");
+        }
+        if (log != event->logical)
+        {
+          CLog::Log(LOGINFO, "t");
+        }
+
         if(event->logical<0)
         {
           /* this will not take effect in this event */
@@ -949,9 +962,12 @@ int CDVDInputStreamNavigator::GetSubTitleStreamCount()
 int CDVDInputStreamNavigator::GetActiveAudioStream()
 {
   int activeStream = -1;
+  int8_t audio = - 1;
 
   if (m_dvdnav)
   {
+     return m_dll.dvdnav_get_active_audio_stream(m_dvdnav);
+
     vm_t* vm = m_dll.dvdnav_get_vm(m_dvdnav);
     if (vm && vm->state.pgc)
     {
@@ -970,6 +986,11 @@ int CDVDInputStreamNavigator::GetActiveAudioStream()
 
       activeStream = ConvertAudioStreamId_ExternalToXBMC(audioN);
     }
+  }
+
+  if (audio != activeStream)
+  {
+    audio = ConvertAudioStreamId_ExternalToXBMC(audio);
   }
 
   return activeStream;
