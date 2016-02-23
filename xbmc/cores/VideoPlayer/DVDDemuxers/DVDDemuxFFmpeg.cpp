@@ -706,6 +706,7 @@ DemuxPacket* CDVDDemuxFFmpeg::Read()
 
       pPacket = CDVDDemuxUtils::AllocateDemuxPacket(0);
       pPacket->iStreamId = DMX_SPECIALID_STREAMCHANGE;
+      pPacket->demuxerId = m_demuxerId;
 
       return pPacket;
     }
@@ -877,6 +878,7 @@ DemuxPacket* CDVDDemuxFFmpeg::Read()
     }
     // set continuous stream id for player
     pPacket->iStreamId = stream->iId;
+    pPacket->demuxerId = m_demuxerId;
   }
   return pPacket;
 }
@@ -1352,6 +1354,7 @@ CDemuxStream* CDVDDemuxFFmpeg::AddStream(int iId)
     else
       stream->iPhysicalId = pStream->id;
 
+    stream->demuxerId = m_demuxerId;
     AddStream(iId, stream);
     return stream;
   }
