@@ -3,6 +3,7 @@ set(SOURCES DVDFactoryInputStream.cpp
             DVDInputStreamFFmpeg.cpp
             DVDInputStreamFile.cpp
             DVDInputStreamMemory.cpp
+            DVDInputStreamMultiSource.cpp
             DVDInputStreamNavigator.cpp
             DVDInputStreamPVRManager.cpp
             DVDInputStreamRTMP.cpp
@@ -15,6 +16,8 @@ set(HEADERS DVDFactoryInputStream.h
             DVDInputStreamFFmpeg.h
             DVDInputStreamFile.h
             DVDInputStreamMemory.h
+            DVDInputStreamMultiSource.h
+            DVDInputStreamMultiStreams.h
             DVDInputStreamNavigator.h
             DVDInputStreamPVRManager.h
             DVDInputStreamRTMP.h

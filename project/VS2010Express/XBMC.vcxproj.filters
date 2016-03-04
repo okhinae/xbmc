@@ -3298,6 +3298,9 @@
     <ClCompile Include="..\..\xbmc\cores\VideoPlayer\DVDInputStreams\InputStreamAddon.cpp">
       <Filter>cores\VideoPlayer\DVDInputStreams</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\xbmc\cores\VideoPlayer\DVDInputStreams\InputStreamMultiSource.cpp">
+      <Filter>cores\VideoPlayer\DVDInputStreams</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\xbmc\win32\pch.h">
@@ -6332,6 +6335,9 @@
     <ClInclude Include="..\..\xbmc\cores\VideoPlayer\Process\ProcessInfo.h">
       <Filter>cores\Process</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\xbmc\cores\VideoPlayer\DVDInputStreams\InputStreamMultiSource.h">
+      <Filter>cores\VideoPlayer\DVDInputStreams</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\xbmc\addons\kodi-addon-dev-kit\include\kodi\kodi_adsp_dll.h">
       <Filter>addons\include</Filter>
     </ClInclude>
@@ -6403,6 +6409,9 @@
     </ClInclude>
     <ClInclude Include="..\..\xbmc\addons\AddonCallbacksInputStream.h">
       <Filter>addons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\xbmc\cores\VideoPlayer\DVDInputStreams\InputStreamMultiStreams.h">
+      <Filter>cores\VideoPlayer\DVDInputStreams</Filter>
     </ClInclude>
     <ClInclude Include="..\..\xbmc\cores\VideoPlayer\DVDDemuxers\DVDDemuxPacket.h">
       <Filter>cores\VideoPlayer\DVDDemuxers</Filter>
