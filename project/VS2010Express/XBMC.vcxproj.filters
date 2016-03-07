@@ -6404,6 +6404,9 @@
     <ClInclude Include="..\..\xbmc\addons\AddonCallbacksInputStream.h">
       <Filter>addons</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\xbmc\cores\VideoPlayer\DVDDemuxers\DVDDemuxPacket.h">
+      <Filter>cores\VideoPlayer\DVDDemuxers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\..\xbmc\win32\XBMC_PC.rc">
