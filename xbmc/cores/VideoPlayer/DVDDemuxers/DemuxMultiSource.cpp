@@ -61,15 +61,37 @@ void CDemuxMultiSource::EnableStream(int64_t demuxerId, int id, bool enable)
   auto iter = m_demuxerMap.find(demuxerId);
   if (iter != m_demuxerMap.end())
   {
-    DemuxPtr demuxer = iter->second;
-    demuxer->EnableStream(demuxerId, id, enable);
+    Demuxer& demuxer = iter->second;
+    demuxer.second->EnableStream(demuxerId, id, enable);
     if (enable)
     {
-      m_demuxerQueue.push(std::make_pair((double)DVD_NOPTS_VALUE, demuxer));
+      demuxer.first++;
+      // no stream of this demuxer was not used till now
+      if (demuxer.first == 1)
+      {
+        m_demuxerQueue.push(std::make_pair((double)DVD_NOPTS_VALUE, demuxer.second));
+      }
     }
-    else
+    else if (demuxer.first > 0)
     {
-      // check if demuxer can be removed from the queue
+      demuxer.first--;
+      // no stream of this demuxer will be used from now on
+      if (demuxer.first == 0)
+      {
+        DemuxQueue demuxerQueue = DemuxQueue();
+        DemuxQueue demuxerQueueCopy = m_demuxerQueue;
+        
+        while (!demuxerQueueCopy.empty())
+        {
+          std::pair<double, DemuxPtr>& iter = demuxerQueueCopy.top();
+          if (iter.second != demuxer.second)
+          {
+            demuxerQueue.push(iter);
+          }
+          demuxerQueueCopy.pop();
+        }
+        m_demuxerQueue = demuxerQueue;
+      }
     }
   }
 }
@@ -79,10 +101,21 @@ void CDemuxMultiSource::EnableStreamAtPTS(int64_t demuxerId, int id, uint64_t pt
   auto iter = m_demuxerMap.find(demuxerId);
   if (iter != m_demuxerMap.end())
   {
-    DemuxPtr demuxer = iter->second;
-    if (demuxer->SupportsEnableAtPTS(demuxerId))
+    Demuxer& demuxer = iter->second;
+
+    if (demuxer.second->SupportsEnableAtPTS(demuxerId))
     {
-      demuxer->EnableStreamAtPTS(demuxerId, id, pts);
+      demuxer.second->EnableStreamAtPTS(demuxerId, id, pts);
+      demuxer.first++;
+      if (demuxer.first == 1)
+      {
+        m_demuxerQueue.push(std::make_pair((double)DVD_NOPTS_VALUE, demuxer.second));
+      }
+    }
+    else
+    {
+      CLog::Log(LOGDEBUG, "%s called, but the demuxer for file %s does not support it",
+        __FUNCTION__, CURL::GetRedacted(demuxer.second->GetFileName()));
     }
   }
 }
@@ -107,7 +140,7 @@ CDemuxStream* CDemuxMultiSource::GetStream(int64_t demuxerId, int iStreamId) con
   auto iter = m_demuxerMap.find(demuxerId);
   if (iter != m_demuxerMap.end())
   {
-    return iter->second->GetStream(demuxerId, iStreamId);
+    return iter->second.second->GetStream(demuxerId, iStreamId);
   }
   else
     return NULL;
@@ -132,7 +165,7 @@ std::string CDemuxMultiSource::GetStreamCodecName(int64_t demuxerId, int iStream
   auto iter = m_demuxerMap.find(demuxerId);
   if (iter != m_demuxerMap.end())
   {
-    return iter->second->GetStreamCodecName(demuxerId, iStreamId);
+    return iter->second.second->GetStreamCodecName(demuxerId, iStreamId);
   }
   else
     return "";
@@ -171,7 +204,7 @@ bool CDemuxMultiSource::Open(CDVDInputStream* pInput)
     {
       SetMissingStreamDetails(demuxer);
 
-      m_demuxerMap[demuxer->GetDemuxerId()] = demuxer;
+      m_demuxerMap[demuxer->GetDemuxerId()] = std::make_pair(0, demuxer);
       m_DemuxerToInputStreamMap[demuxer] = *iter;
       m_pDemuxers.push_back(demuxer);
       ++iter;
@@ -229,19 +262,23 @@ bool CDemuxMultiSource::SeekTime(int time, bool backwords, double* startpts)
 {
   DemuxQueue demuxerQueue = DemuxQueue();
   bool ret = false;
-  for (auto iter : m_pDemuxers)
+  for (auto& iter : m_demuxerMap)
   {
-    if (iter->SeekTime(time, false, startpts))
+    if (iter.first > 0)
     {
-      demuxerQueue.push(std::make_pair(*startpts, iter));
-      CLog::Log(LOGDEBUG, "%s - starting demuxer from: %d", __FUNCTION__, time);
-      ret = true;
+      DemuxPtr demuxer = iter.second.second;
+	    if (demuxer->SeekTime(time, false, startpts))
+	    {
+	      demuxerQueue.push(std::make_pair(*startpts, demuxer));
+	      CLog::Log(LOGDEBUG, "%s - starting demuxer from: %d", __FUNCTION__, time);
+	      ret = true;
+	    }
+	    else
+	    {
+	      CLog::Log(LOGDEBUG, "%s - failed to start demuxing from: %d", __FUNCTION__, time);
+	    }
+	  }
     }
-    else
-    {
-      CLog::Log(LOGDEBUG, "%s - failed to start demuxing from: %d", __FUNCTION__, time);
-    }
-  }
   m_demuxerQueue = demuxerQueue;
   return ret;
 }
@@ -272,3 +309,15 @@ void CDemuxMultiSource::SetMissingStreamDetails(DemuxPtr demuxer)
     }
   }
 }
+
+bool CDemuxMultiSource::SupportsEnableAtPTS(int64_t demuxerId)
+{
+  auto iter = m_demuxerMap.find(demuxerId);
+  if (iter != m_demuxerMap.end())
+  {
+    return iter->second.second->SupportsEnableAtPTS(demuxerId);
+  }
+
+  return false;
+}
+

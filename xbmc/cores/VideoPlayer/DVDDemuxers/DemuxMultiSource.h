@@ -38,6 +38,7 @@ struct comparator{
 };
 
 typedef std::priority_queue<std::pair<double, DemuxPtr>, std::vector<std::pair<double, DemuxPtr>>, comparator> DemuxQueue;
+typedef std::pair<size_t, DemuxPtr> Demuxer;
 
 class CDemuxMultiSource : public CDVDDemux
 {
@@ -48,7 +49,7 @@ public:
   
   void Abort();
 
-  virtual bool SupportsEnableAtPTS() override { return false; }
+  virtual bool SupportsEnableAtPTS(int64_t demuxerId) override;
   virtual void EnableStream(int64_t demuxerId, int id, bool enable) override;
   virtual void EnableStreamAtPTS(int64_t demuxerId, int id, uint64_t pts) override;
 
@@ -74,5 +75,5 @@ private:
   std::vector<DemuxPtr> m_pDemuxers;
   std::map<DemuxPtr, InputStreamPtr> m_DemuxerToInputStreamMap;
   DemuxQueue m_demuxerQueue;
-  std::map<int64_t, DemuxPtr> m_demuxerMap;
+  std::map<int64_t, Demuxer> m_demuxerMap;
 };
