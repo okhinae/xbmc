@@ -56,6 +56,37 @@ void CDemuxMultiSource::Dispose()
 
 }
 
+void CDemuxMultiSource::EnableStream(int64_t demuxerId, int id, bool enable)
+{
+  auto iter = m_demuxerMap.find(demuxerId);
+  if (iter != m_demuxerMap.end())
+  {
+    DemuxPtr demuxer = iter->second;
+    demuxer->EnableStream(demuxerId, id, enable);
+    if (enable)
+    {
+      m_demuxerQueue.push(std::make_pair((double)DVD_NOPTS_VALUE, demuxer));
+    }
+    else
+    {
+      // check if demuxer can be removed from the queue
+    }
+  }
+}
+
+void CDemuxMultiSource::EnableStreamAtPTS(int64_t demuxerId, int id, uint64_t pts)
+{
+  auto iter = m_demuxerMap.find(demuxerId);
+  if (iter != m_demuxerMap.end())
+  {
+    DemuxPtr demuxer = iter->second;
+    if (demuxer->SupportsEnableAtPTS(demuxerId))
+    {
+      demuxer->EnableStreamAtPTS(demuxerId, id, pts);
+    }
+  }
+}
+
 void CDemuxMultiSource::Flush()
 {
   for (auto iter : m_pDemuxers)
@@ -143,7 +174,6 @@ bool CDemuxMultiSource::Open(CDVDInputStream* pInput)
       m_demuxerMap[demuxer->GetDemuxerId()] = demuxer;
       m_DemuxerToInputStreamMap[demuxer] = *iter;
       m_pDemuxers.push_back(demuxer);
-      m_demuxerQueue.push(std::make_pair((double)DVD_NOPTS_VALUE, demuxer));
       ++iter;
     }
   }

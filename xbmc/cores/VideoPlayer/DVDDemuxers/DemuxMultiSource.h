@@ -47,6 +47,11 @@ public:
   virtual ~CDemuxMultiSource();
   
   void Abort();
+
+  virtual bool SupportsEnableAtPTS() override { return false; }
+  virtual void EnableStream(int64_t demuxerId, int id, bool enable) override;
+  virtual void EnableStreamAtPTS(int64_t demuxerId, int id, uint64_t pts) override;
+
   void Flush();
   virtual std::string GetFileName() { return ""; };
   int GetNrOfStreams() const override;
