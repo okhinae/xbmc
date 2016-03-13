@@ -22,10 +22,12 @@
 
 #include "system.h" // until we get sane int types used here
 #include <memory>
+#include "FileItem.h"
 #include "IPlayerCallback.h"
 #include "guilib/Geometry.h"
 #include "guilib/Resolution.h"
 #include <string>
+#include <vector>
 
 #define CURRENT_STREAM -1
 #define CAPTUREFLAG_CONTINUOUS  0x01 //after a render is done, render a new one immediately
@@ -60,9 +62,8 @@ public:
   std::string state;  /* potential playerstate to restore to */
   bool    fullscreen; /* player is allowed to switch to fullscreen */
   bool    video_only; /* player is not allowed to play audio streams, video streams only */
+  std::vector<CFileItem> associatedFiles;
 };
-
-class CFileItem;
 
 enum IPlayerAudioCapabilities
 {
