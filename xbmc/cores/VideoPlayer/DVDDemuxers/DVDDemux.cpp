@@ -74,3 +74,14 @@ std::string CDemuxStream::GetStreamName()
 {
   return "";
 }
+
+bool CDVDDemux::HasActiveStreams() const
+{
+  for (auto pStream : GetStreams())
+  {
+    if (pStream && !pStream->skip)
+      return true;
+  }
+
+  return false;
+}

@@ -65,6 +65,9 @@ public:
   virtual bool SupportsEnableAtPTS(int64_t demuxerId) override;
 
 private:
+
+  void AdaptQueue(DemuxPtr demuxer, bool enable);
+
   void Dispose();
   void SetMissingStreamDetails(DemuxPtr demuxer);
 

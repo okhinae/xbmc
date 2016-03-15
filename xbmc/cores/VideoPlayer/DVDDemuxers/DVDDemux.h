@@ -354,6 +354,11 @@ public:
   */
   int64_t GetDemuxerId() { return m_demuxerId; };
 
+  /*
+  * return true if at least one stream of the demuxer is enabled, else false
+  */
+  bool HasActiveStreams() const;
+
 protected:
   virtual void EnableStream(int id, bool enable) {};
   virtual void EnableStreamAtPTS(int id, uint64_t pts) {};
