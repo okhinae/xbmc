@@ -2546,6 +2546,7 @@ void CVideoPlayer::HandleMessages()
             {
               m_dvd.iSelectedAudioStream = -1;
               CloseStream(m_CurrentAudio, false);
+              m_pDemuxer->EnableStream(st.demuxerId, st.id, true);
               m_messenger.Put(new CDVDMsgPlayerSeek((int) GetTime(), true, true, true, true, true));
             }
           }
