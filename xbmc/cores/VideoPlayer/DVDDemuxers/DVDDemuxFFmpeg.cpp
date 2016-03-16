@@ -560,6 +560,13 @@ void CDVDDemuxFFmpeg::Abort()
   m_timeout.SetExpired();
 }
 
+void CDVDDemuxFFmpeg::EnableStream(int id, bool enable)
+{
+  auto it = m_streams.find(id);
+  if (it != m_streams.end())
+    it->second->skip = !enable;
+}
+
 void CDVDDemuxFFmpeg::SetSpeed(int iSpeed)
 {
   if(!m_pFormatContext)
@@ -876,6 +883,12 @@ DemuxPacket* CDVDDemuxFFmpeg::Read()
       CLog::Log(LOGERROR, "CDVDDemuxFFmpeg::AddStream - internal error, stream is null");
       CDVDDemuxUtils::FreeDemuxPacket(pPacket);
       return NULL;
+    }
+
+    if (stream->skip && HasActiveStreams())
+    {
+      CDVDDemuxUtils::FreeDemuxPacket(pPacket);
+      return Read();
     }
 
     pPacket->iStreamId = stream->uniqueId;

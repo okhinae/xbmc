@@ -95,6 +95,7 @@ public:
   void Reset();
   void Flush();
   void Abort();
+  void EnableStream(int id, bool enable) override;
   void SetSpeed(int iSpeed);
   virtual std::string GetFileName();
 
