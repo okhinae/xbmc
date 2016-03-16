@@ -94,6 +94,7 @@ public:
     flags = FLAG_NONE;
     realtime = false;
     bandwidth = 0;
+    skip = false;
   }
 
   virtual ~CDemuxStream()
@@ -122,6 +123,7 @@ public:
 
   char language[4]; // ISO 639 3-letter language code (empty string if undefined)
   bool disabled; // set when stream is disabled. (when no decoder exists)
+  bool skip; // set when packets of the stream can be dropped/skipped
 
   std::string codecName;
 
