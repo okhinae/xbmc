@@ -223,10 +223,13 @@ DemuxPacket* CDemuxMultiSource::Read()
 
 bool CDemuxMultiSource::SeekTime(int time, bool backwords, double* startpts)
 {
-  DemuxQueue demuxerQueue = DemuxQueue();
   bool ret = false;
-  for (auto& iter : m_demuxerMap)
+  DemuxQueue demuxerQueue = DemuxQueue();
+  DemuxQueue demuxerQueueCopy = m_demuxerQueue;
+
+  while (!demuxerQueueCopy.empty())
   {
+    std::pair<double, DemuxPtr>& iter = demuxerQueueCopy.top();
     if (iter.second->SeekTime(time, false, startpts))
     {
       demuxerQueue.push(std::make_pair(*startpts, iter.second));
@@ -237,7 +240,9 @@ bool CDemuxMultiSource::SeekTime(int time, bool backwords, double* startpts)
     {
       CLog::Log(LOGDEBUG, "%s - failed to start demuxing from: %d", __FUNCTION__, time);
     }
+    demuxerQueueCopy.pop();
   }
+
   m_demuxerQueue = demuxerQueue;
   return ret;
 }
